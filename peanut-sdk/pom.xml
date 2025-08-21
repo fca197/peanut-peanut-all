@@ -80,6 +80,10 @@
       <groupId>com.uber</groupId>
       <artifactId>h3</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+    </dependency>
 
   </dependencies>
 
