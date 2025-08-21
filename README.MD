@@ -9,7 +9,7 @@
 | 模块名称       | 模块依赖              | 包含内容                        | 
 |------------|-------------------|-----------------------------|
 | 基础模块       | base-model        | 基础配置， 包含 entity定义和  json序列化 | 
-| aps排产排程    | peanut-aps        | 预测，排产排程系统                   | 
+| aps排产排程    | peanut-aps        | 预测，排产排程系统 ，适合工厂使用           | 
 | 基础模块       | peanut-base       | 基础配置                        | 
 | 文档模块       | peanut-doc        | 项目文档                        |  
 | 工作流        | peanut-flow       | 工作流相关， 暂停                   | 
@@ -19,5 +19,6 @@
 | 任务         | peanut-task       | 自定义工作流， 暂停                  | 
 | aps web端   | peanut-web-aps    | aps web端                    | 
 | web端脚手架    | peanut-web-base   | web端  脚手架                   | 
+| 门店相关       | peanut-web-store  | 开店信息，适合餐饮开店使用               | 
 
 
