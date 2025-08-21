@@ -59,11 +59,10 @@ public class ApsOrderFieldShowTemplateServiceImpl extends MPJBaseServiceImpl<Aps
           t -> $.copy(t, ApsOrderFieldShowTemplateExportQueryPageListInfoRes.class));
       records = dataList.getRecords();
     } else {
-      records = ApsOrderFieldShowTemplateConverter.INSTANCE.queryPageListRes(this.list(q));
+      List<ApsOrderFieldShowTemplate> showTemplateList = this.list(q);
+      records = ApsOrderFieldShowTemplateConverter.INSTANCE.queryPageListRes(showTemplateList);
     }
-
-    // 类型转换，  更换枚举 等操作 
-
+    // 类型转换，  更换枚举 等操作
     ((ApsOrderFieldShowTemplateService) AopContext.currentProxy()).setName(records);
     return DynamicsPage.init(page, records);
   }
