@@ -214,6 +214,35 @@
         <artifactId>peanut-algorithm-sdk</artifactId>
         <version>3.0.0-20250820-SNAPSHOT</version>
       </dependency>
+      <dependency>
+        <artifactId>ortools-java</artifactId>
+        <exclusions>
+          <exclusion>
+            <artifactId>ortools-darwin-x86-64</artifactId>
+            <groupId>com.google.ortools</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>ortools-win32-x86-64</artifactId>
+            <groupId>com.google.ortools</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>ortools-darwin-aarch64</artifactId>
+            <groupId>com.google.ortools</groupId>
+          </exclusion>
+          <exclusion>
+            <artifactId>ortools-linux-aarch64</artifactId>
+            <groupId>com.google.ortools</groupId>
+          </exclusion>
+        </exclusions>
+        <groupId>com.google.ortools</groupId>
+        <version>9.14.6206</version>
+      </dependency>
+      <dependency>
+        <groupId>com.googlecode.aviator</groupId>
+        <artifactId>aviator</artifactId>
+        <version>5.4.3</version>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>
