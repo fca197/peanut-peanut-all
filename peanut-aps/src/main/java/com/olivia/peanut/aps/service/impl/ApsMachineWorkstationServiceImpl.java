@@ -120,7 +120,7 @@ public class ApsMachineWorkstationServiceImpl extends MPJBaseServiceImpl<ApsMach
         item.setMachineWorkstationItemDtoList(ApsMachineWorkstationItemConverter.INSTANCE.queryListRes(workstationItemList));
       });
     }
-    setNameService.setName(list, SetNamePojoUtils.FACTORY, SetNamePojoUtils.OP_USER_NAME);
+    setNameService.setName(list, SetNamePojoUtils.FACTORY);
   }
 
 

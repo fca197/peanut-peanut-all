@@ -183,7 +183,7 @@ public class ApsRollingForecastOrderServiceImpl extends MPJBaseServiceImpl<ApsRo
         .setNameFieldName("statusName").setServiceName(ApsStatusService.class) //
         .setNameConfigList(List.of(new NameConfig().setIdField("beginStatusId").setNameField("beginStatusName"),//
             new NameConfig().setIdField("endStatusId").setNameField("endStatusName")));
-    setNameService.setName(apsRollingForecastOrderDtoList, SetNamePojoUtils.FACTORY, statusNamePojo, SetNamePojoUtils.OP_USER_NAME);
+    setNameService.setName(apsRollingForecastOrderDtoList, SetNamePojoUtils.FACTORY, statusNamePojo);
   }
 
 

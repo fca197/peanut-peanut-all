@@ -14,7 +14,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsOrderGoodsForecastMakeDto extends BaseEntityDto {
 
   private Long orderId;

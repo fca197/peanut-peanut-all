@@ -13,7 +13,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsSchedulingVersionItemDto extends BaseEntityDto {
 
   private Long schedulingVersionId;

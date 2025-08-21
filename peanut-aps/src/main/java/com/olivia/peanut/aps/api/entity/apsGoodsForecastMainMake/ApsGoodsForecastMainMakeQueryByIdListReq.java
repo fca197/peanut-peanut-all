@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsGoodsForecastMainMakeQueryByIdListReq {
 
   private List<Long> idList;

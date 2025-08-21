@@ -17,7 +17,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsSchedulingDayConfigVersionDetailDto extends BaseEntityDto {
 
   //  @NotNull(message = "${column.comment}不能为空", groups = {InsertCheck.class, UpdateCheck.class})

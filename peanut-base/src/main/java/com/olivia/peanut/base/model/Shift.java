@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("t_shift")
 public class Shift extends BaseEntity<Shift> {
 

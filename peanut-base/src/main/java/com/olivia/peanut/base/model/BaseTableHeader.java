@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("base_table_header")
 public class BaseTableHeader extends BaseEntity<BaseTableHeader> {
 

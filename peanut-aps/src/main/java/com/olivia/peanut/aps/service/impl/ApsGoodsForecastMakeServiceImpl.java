@@ -663,8 +663,7 @@ public class ApsGoodsForecastMakeServiceImpl extends MPJBaseServiceImpl<ApsGoods
   public @Override void setName(
       List<? extends ApsGoodsForecastMakeDto> apsGoodsForecastMakeDtoList) {
 
-    setNameService.setName(apsGoodsForecastMakeDtoList, SetNamePojoUtils.GOODS,
-        SetNamePojoUtils.OP_USER_NAME);
+    setNameService.setName(apsGoodsForecastMakeDtoList, SetNamePojoUtils.GOODS);
 
 //    if (CollUtil.isEmpty(apsGoodsForecastMakeDtoList)) {
 //      return;

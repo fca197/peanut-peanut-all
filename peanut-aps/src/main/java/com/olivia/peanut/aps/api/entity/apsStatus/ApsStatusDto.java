@@ -16,7 +16,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsStatusDto extends BaseEntityDto {
 
   @NotBlank(message = "状态编码不能为空", groups = {InsertCheck.class, UpdateCheck.class})

@@ -15,7 +15,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsSchedulingConstraintsDto extends BaseEntityDto {
 
   @NotBlank(message = "约束编码不能为空", groups = {InsertCheck.class})

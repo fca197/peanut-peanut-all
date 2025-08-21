@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName(value = "aps_goods_forecast", autoResultMap = true)
 public class ApsGoodsForecast extends BaseEntity<ApsGoodsForecast> {
 

@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("base_role_group_resource")
 public class BaseRoleGroupResource extends BaseEntity<BaseRoleGroupResource> {
 

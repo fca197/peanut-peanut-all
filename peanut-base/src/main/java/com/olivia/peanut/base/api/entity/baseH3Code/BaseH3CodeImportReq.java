@@ -12,7 +12,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class BaseH3CodeImportReq extends BaseH3CodeDto {
 
 

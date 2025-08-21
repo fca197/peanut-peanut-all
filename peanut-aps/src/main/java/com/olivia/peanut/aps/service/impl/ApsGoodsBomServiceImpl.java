@@ -3,7 +3,6 @@ package com.olivia.peanut.aps.service.impl;
 
 import static com.olivia.sdk.util.SetNamePojoUtils.FACTORY;
 import static com.olivia.sdk.util.SetNamePojoUtils.GOODS;
-import static com.olivia.sdk.util.SetNamePojoUtils.OP_USER_NAME;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -51,8 +50,7 @@ public class ApsGoodsBomServiceImpl extends MPJBaseServiceImpl<ApsGoodsBomMapper
     MPJLambdaWrapper<ApsGoodsBom> q = getWrapper(req.getData());
     List<ApsGoodsBom> list = this.list(q);
 
-    List<ApsGoodsBomDto> dataList = list.stream().map(t -> $.copy(t, ApsGoodsBomDto.class))
-        .collect(Collectors.toList());
+    List<ApsGoodsBomDto> dataList = list.stream().map(t -> $.copy(t, ApsGoodsBomDto.class)).collect(Collectors.toList());
 
     ((ApsGoodsBomServiceImpl) AopContext.currentProxy()).setName(dataList);
 
@@ -69,8 +67,7 @@ public class ApsGoodsBomServiceImpl extends MPJBaseServiceImpl<ApsGoodsBomMapper
     List<ApsGoodsBomExportQueryPageListInfoRes> records;
     if (Boolean.TRUE.equals(req.getQueryPage())) {
       IPage<ApsGoodsBom> list = this.page(page, q);
-      IPage<ApsGoodsBomExportQueryPageListInfoRes> dataList = list.convert(
-          t -> $.copy(t, ApsGoodsBomExportQueryPageListInfoRes.class));
+      IPage<ApsGoodsBomExportQueryPageListInfoRes> dataList = list.convert(t -> $.copy(t, ApsGoodsBomExportQueryPageListInfoRes.class));
       records = dataList.getRecords();
     } else {
       records = $.copyList(this.list(q), ApsGoodsBomExportQueryPageListInfoRes.class);
@@ -78,8 +75,7 @@ public class ApsGoodsBomServiceImpl extends MPJBaseServiceImpl<ApsGoodsBomMapper
 
     // 类型转换，  更换枚举 等操作
 
-    List<ApsGoodsBomExportQueryPageListInfoRes> listInfoRes = $.copyList(records,
-        ApsGoodsBomExportQueryPageListInfoRes.class);
+    List<ApsGoodsBomExportQueryPageListInfoRes> listInfoRes = $.copyList(records, ApsGoodsBomExportQueryPageListInfoRes.class);
     // this.setName(listInfoRes);
     ((ApsGoodsBomServiceImpl) AopContext.currentProxy()).setName(listInfoRes);
     return DynamicsPage.init(page, listInfoRes);
@@ -89,10 +85,8 @@ public class ApsGoodsBomServiceImpl extends MPJBaseServiceImpl<ApsGoodsBomMapper
   public @Override void setName(List<? extends ApsGoodsBomDto> apsGoodsBomDtoList) {
 
     setNameService.setName(apsGoodsBomDtoList, List.of(FACTORY, GOODS,//
-        OP_USER_NAME, new SetNamePojo().setNameFieldName("stationName")
-            .setServiceName(ApsWorkshopStationService.class).setNameConfigList(List.of(
-                new NameConfig().setIdField("bomUseWorkStation")
-                    .setNameFieldList(List.of("bomUseWorkStationName"))))));
+        new SetNamePojo().setNameFieldName("stationName").setServiceName(ApsWorkshopStationService.class)
+            .setNameConfigList(List.of(new NameConfig().setIdField("bomUseWorkStation").setNameFieldList(List.of("bomUseWorkStationName"))))));
   }
 
   @Override
@@ -101,12 +95,9 @@ public class ApsGoodsBomServiceImpl extends MPJBaseServiceImpl<ApsGoodsBomMapper
       return new CheckBomUseExpressionRes().setIsSuccess(Boolean.TRUE);
     }
     Set<String> proectConfigSet = apsProjectConfigService.list(
-            new LambdaQueryWrapper<ApsProjectConfig>().select(ApsProjectConfig::getSaleCode)
-                .eq(ApsProjectConfig::getIsValue, 1)).stream()
-        .map(ApsProjectConfig::getSaleCode).collect(Collectors.toSet());
-    boolean checkBomUseExpression = BomUtils.isMatch(
-        BomUtils.bomExpression2List(req.getBomUseExpression()), "checkBomUseExpression",
-        proectConfigSet);
+            new LambdaQueryWrapper<ApsProjectConfig>().select(ApsProjectConfig::getSaleCode).eq(ApsProjectConfig::getIsValue, 1)).stream().map(ApsProjectConfig::getSaleCode)
+        .collect(Collectors.toSet());
+    boolean checkBomUseExpression = BomUtils.isMatch(BomUtils.bomExpression2List(req.getBomUseExpression()), "checkBomUseExpression", proectConfigSet);
     return new CheckBomUseExpressionRes().setIsSuccess(checkBomUseExpression);
   }
 
@@ -117,11 +108,8 @@ public class ApsGoodsBomServiceImpl extends MPJBaseServiceImpl<ApsGoodsBomMapper
   private MPJLambdaWrapper<ApsGoodsBom> getWrapper(ApsGoodsBomDto obj) {
     MPJLambdaWrapper<ApsGoodsBom> q = new MPJLambdaWrapper<>();
 
-    LambdaQueryUtil.lambdaQueryWrapper(q, obj, ApsGoodsBom.class, ApsGoodsBom::getGoodsId,
-        ApsGoodsBom::getBomName,
-        ApsGoodsBom::getGoodsId,
-        ApsGoodsBom::getFactoryId, BaseEntity::getId, ApsGoodsBom::getBomUseWorkStation,
-        ApsGoodsBom::getBomCode);
+    LambdaQueryUtil.lambdaQueryWrapper(q, obj, ApsGoodsBom.class, ApsGoodsBom::getGoodsId, ApsGoodsBom::getBomName, ApsGoodsBom::getGoodsId, ApsGoodsBom::getFactoryId,
+        BaseEntity::getId, ApsGoodsBom::getBomUseWorkStation, ApsGoodsBom::getBomCode);
 
     q.orderByDesc(ApsGoodsBom::getId);
     return q;

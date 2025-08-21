@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsProcessPathDto extends BaseEntityDto {
 
   @NotBlank(message = "工单路径编码不能为空", groups = {InsertCheck.class, UpdateCheck.class})

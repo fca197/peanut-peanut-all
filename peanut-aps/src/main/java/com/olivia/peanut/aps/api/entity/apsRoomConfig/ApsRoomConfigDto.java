@@ -16,7 +16,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsRoomConfigDto extends BaseEntityDto {
 
   @NotNull(message = "房间不能为空", groups = {InsertCheck.class, UpdateCheck.class})

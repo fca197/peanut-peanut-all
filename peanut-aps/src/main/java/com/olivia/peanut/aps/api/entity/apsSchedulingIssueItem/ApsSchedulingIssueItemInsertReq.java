@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsSchedulingIssueItemInsertReq extends ApsSchedulingIssueItemDto {
 
   @NotNull(message = "当前日期不能为空", groups = {InsertCheck.class, UpdateCheck.class})

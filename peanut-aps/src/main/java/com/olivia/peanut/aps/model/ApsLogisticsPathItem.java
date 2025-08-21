@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_logistics_path_item")
 public class ApsLogisticsPathItem extends BaseEntity<ApsLogisticsPathItem> {
 

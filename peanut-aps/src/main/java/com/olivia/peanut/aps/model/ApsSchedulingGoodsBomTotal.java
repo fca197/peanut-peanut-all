@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_scheduling_goods_bom_total")
 public class ApsSchedulingGoodsBomTotal extends BaseEntity<ApsSchedulingGoodsBomTotal> {
 

@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_scheduling_issue_item")
 public class ApsSchedulingIssueItem extends BaseEntity<ApsSchedulingIssueItem> {
 

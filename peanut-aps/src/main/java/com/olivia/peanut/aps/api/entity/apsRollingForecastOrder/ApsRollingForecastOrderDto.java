@@ -18,7 +18,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsRollingForecastOrderDto extends BaseEntityDto {
 
   @NotNull(message = "工厂id不能为空", groups = {InsertCheck.class, UpdateCheck.class})

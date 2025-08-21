@@ -17,7 +17,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsGoodsForecastMakeDto extends BaseEntityDto {
 
   @NotNull(message = "预测主表不能为空", groups = {InsertCheck.class, UpdateCheck.class})

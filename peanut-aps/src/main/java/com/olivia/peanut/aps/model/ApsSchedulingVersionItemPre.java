@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName(value = "aps_scheduling_version_item_pre", autoResultMap = true)
 public class ApsSchedulingVersionItemPre extends BaseEntity<ApsSchedulingVersionItemPre> {
 

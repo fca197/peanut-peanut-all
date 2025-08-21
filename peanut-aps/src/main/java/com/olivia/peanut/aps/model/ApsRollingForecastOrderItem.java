@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_rolling_forecast_order_item")
 public class ApsRollingForecastOrderItem extends BaseEntity<ApsRollingForecastOrderItem> {
 

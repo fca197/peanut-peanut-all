@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("msg_message_read")
 public class MsgMessageRead extends BaseEntity<MsgMessageRead> {
 

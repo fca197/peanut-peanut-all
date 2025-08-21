@@ -16,7 +16,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsSchedulingIssueItemDto extends BaseEntityDto {
 
 

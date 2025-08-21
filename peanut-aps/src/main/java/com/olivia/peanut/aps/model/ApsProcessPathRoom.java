@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_process_path_room")
 public class ApsProcessPathRoom extends BaseEntity<ApsProcessPathRoom> {
 

@@ -22,7 +22,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsSchedulingDayConfigVersionDto extends BaseEntityDto {
 
   @NotNull(message = "排程配置不能为空", groups = {InsertCheck.class, UpdateCheck.class})

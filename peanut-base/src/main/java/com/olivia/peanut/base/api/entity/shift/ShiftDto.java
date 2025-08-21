@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ShiftDto extends BaseEntityDto {
 
   private String shiftCode;

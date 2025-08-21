@@ -24,10 +24,10 @@ public class SetNamePojoUtils {
       .setNameConfigList(List.of(new NameConfig("goodsId", ("goodsName"))));
   static final Class<? extends IService<?>> serviceNameLoginAccountService = getClass("com.olivia.peanut.base.service.LoginAccountService");
   // loginUser
-  public static final SetNamePojo OP_USER_NAME = new SetNamePojo()//
-      .setNameFieldName("userName").setServiceName(serviceNameLoginAccountService)//
-      .setNameConfigList(List.of(new NameConfig("createBy").setNameField("createUserName"),//
-          new NameConfig("updateBy").setNameField("updateUserName")));
+//  public static final SetNamePojo OP_USER_NAME = new SetNamePojo()//
+//      .setNameFieldName("userName").setServiceName(serviceNameLoginAccountService)//
+//      .setNameConfigList(List.of(new NameConfig("createBy").setNameField("createUserName"),//
+//          new NameConfig("updateBy").setNameField("updateUserName")));
 
   @SuppressWarnings("unchecked")
   private static <T> T getClass(String className) {

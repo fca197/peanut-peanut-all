@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName(value = "aps_order_goods_bom_kitting_version", autoResultMap = true)
 public class ApsOrderGoodsBomKittingVersion extends BaseEntity<ApsOrderGoodsBomKittingVersion> {
 

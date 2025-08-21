@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_scheduling_goods_status_date")
 public class ApsSchedulingGoodsStatusDate extends BaseEntity<ApsSchedulingGoodsStatusDate> {
 

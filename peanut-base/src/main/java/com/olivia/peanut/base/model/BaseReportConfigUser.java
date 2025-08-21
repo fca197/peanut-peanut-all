@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("base_report_config_user")
 public class BaseReportConfigUser extends BaseEntity<BaseReportConfigUser> {
 

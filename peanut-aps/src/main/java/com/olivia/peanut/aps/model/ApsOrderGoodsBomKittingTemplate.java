@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName(value = "aps_order_goods_bom_kitting_template", autoResultMap = true)
 public class ApsOrderGoodsBomKittingTemplate extends BaseEntity<ApsOrderGoodsBomKittingTemplate> {
 

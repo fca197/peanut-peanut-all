@@ -19,7 +19,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsOrderGoodsBomKittingTemplateDto extends BaseEntityDto {
 
   /***

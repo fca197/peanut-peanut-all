@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsProcessPathRoomDto extends BaseEntityDto {
 
   @NotNull(message = "流程不能为空", groups = {InsertCheck.class, UpdateCheck.class})

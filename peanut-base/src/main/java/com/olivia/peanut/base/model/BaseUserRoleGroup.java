@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("base_user_role_group")
 public class BaseUserRoleGroup extends BaseEntity<BaseUserRoleGroup> {
 

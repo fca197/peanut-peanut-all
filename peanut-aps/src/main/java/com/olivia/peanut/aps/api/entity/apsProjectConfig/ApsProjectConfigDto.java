@@ -17,7 +17,7 @@ import lombok.Setter;
 //@Accessors(chain=true)
 @Getter
 @Setter
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class ApsProjectConfigDto extends BaseEntityDto {
 
   @NotNull(message = "销售编码不能为空", groups = {InsertCheck.class, UpdateCheck.class})

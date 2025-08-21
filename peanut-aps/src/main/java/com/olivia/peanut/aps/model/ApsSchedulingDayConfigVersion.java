@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName(value = "aps_scheduling_day_config_version", autoResultMap = true)
 
 public class ApsSchedulingDayConfigVersion extends BaseEntity<ApsSchedulingDayConfigVersion> {

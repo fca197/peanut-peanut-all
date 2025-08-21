@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_machine_workstation")
 public class ApsMachineWorkstation extends BaseEntity<ApsMachineWorkstation> {
 

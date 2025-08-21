@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Getter
 @Setter
-//@SuppressWarnings("serial")
+////@SuppressWarnings("serial")
 @TableName("aps_make_capacity_goods")
 public class ApsMakeCapacityGoods extends BaseEntity<ApsMakeCapacityGoods> {
 
