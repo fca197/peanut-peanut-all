@@ -10,9 +10,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-/***
- *
- */
 @Slf4j
 @EnableCaching
 //@EnableAspectJAutoProxy
@@ -21,16 +18,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @SpringBootApplication(scanBasePackages = "com.olivia")
 @EnableTransactionManagement
-public class APSBootstrapApplication {
-
+public class JavaModelApplication {
 
   public static void main(String[] args) {
 
     MDCUtils.initMdc();
     try {
-      log.info(">>>>>>>  APSBootstrapApplication  start  >>>>>>>");
-      SpringApplication.run(APSBootstrapApplication.class, args);
-      log.info(">>>>>>>  APSBootstrapApplication  start success >>>>>>>");
+      log.info(">>>>>>>  JavaModelApplication  start  >>>>>>>");
+      SpringApplication.run(JavaModelApplication.class, args);
+      log.info(">>>>>>>  JavaModelApplication  start success >>>>>>>");
       ServiceNotice.notifyStart();
 
     } catch (Exception e) {
