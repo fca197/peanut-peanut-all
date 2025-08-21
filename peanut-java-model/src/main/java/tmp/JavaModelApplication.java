@@ -1,6 +1,5 @@
 package tmp;
 
-import com.olivia.sdk.config.ServiceNotice;
 import com.olivia.sdk.utils.MDCUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
@@ -27,10 +26,10 @@ public class JavaModelApplication {
       log.info(">>>>>>>  JavaModelApplication  start  >>>>>>>");
       SpringApplication.run(JavaModelApplication.class, args);
       log.info(">>>>>>>  JavaModelApplication  start success >>>>>>>");
-      ServiceNotice.notifyStart();
 
     } catch (Exception e) {
-      ServiceNotice.notifyErrorStop(e);
+
+      log.info(">>>>>>>  JavaModelApplication  start fail >>>>>>> {}", e.getMessage(), e);
     }
 
     MDCUtils.clear();

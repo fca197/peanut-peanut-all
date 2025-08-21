@@ -1,6 +1,5 @@
 package tmp;
 
-import com.olivia.sdk.config.ServiceNotice;
 import com.olivia.sdk.utils.MDCUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
@@ -31,10 +30,10 @@ public class APSBootstrapApplication {
       log.info(">>>>>>>  APSBootstrapApplication  start  >>>>>>>");
       SpringApplication.run(APSBootstrapApplication.class, args);
       log.info(">>>>>>>  APSBootstrapApplication  start success >>>>>>>");
-      ServiceNotice.notifyStart();
+
 
     } catch (Exception e) {
-      ServiceNotice.notifyErrorStop(e);
+      log.error("APSBootstrapApplication start error msg:{}", e.getMessage(), e);
     }
 
     MDCUtils.clear();

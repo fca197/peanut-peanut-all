@@ -120,6 +120,8 @@ public class PeanutProperties {
    */
   private String licenseCode;
 
+  private String ortoolsSoPath;
+
   /**
    * 初始化后检查必要的配置参数 使用PostConstruct确保在依赖注入完成后执行
    */

@@ -60,18 +60,19 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.aliyun</groupId>
-      <artifactId>dingtalk</artifactId>
-    </dependency>
+
     <dependency>
       <groupId>com.baomidou</groupId>
       <artifactId>mybatis-plus-jsqlparser</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.dingtalk.open</groupId>
-      <artifactId>app-stream-client</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.aliyun</groupId>-->
+<!--      <artifactId>dingtalk</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>com.dingtalk.open</groupId>-->
+<!--      <artifactId>app-stream-client</artifactId>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>

@@ -1,6 +1,5 @@
 package com.olivia;
 
-import com.olivia.sdk.config.ServiceNotice;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -26,9 +25,8 @@ public class BootstrapApplication {
     try {
       SpringApplication.run(BootstrapApplication.class, args);
       log.info(">>>>>>>  BootstrapApplication  start success >>>>>>>");
-      ServiceNotice.notifyStart();
     } catch (Exception e) {
-      ServiceNotice.notifyErrorStop(e);
+      log.info(">>>>>>>  BootstrapApplication  start fail >>>>>>> {}", e.getMessage(), e);
     }
   }
 }

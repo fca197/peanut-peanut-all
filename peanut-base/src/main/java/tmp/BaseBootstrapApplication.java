@@ -1,7 +1,6 @@
 package tmp;
 
 import cn.hutool.system.SystemUtil;
-import com.olivia.sdk.config.ServiceNotice;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -41,9 +40,8 @@ public class BaseBootstrapApplication {
 
       SpringApplication.run(BaseBootstrapApplication.class, args);
       log.info(">>>>>>>  BaseBootstrapApplication  start success >>>>>>>");
-      ServiceNotice.notifyStart();
     } catch (Exception e) {
-      ServiceNotice.notifyErrorStop(e);
+      log.info(">>>>>>>  BaseBootstrapApplication  start fail >>>>>>> {}", e.getMessage(), e);
     }
   }
 }
