@@ -1,0 +1,227 @@
+server:
+  netty:
+    connectionTimeout: 3000
+  port: 80
+  servlet:
+    context-path: /api/peanut
+  http2:
+    enabled: true
+  tomcat:
+    threads:
+      min-spare: 1
+      max: 300
+peanut:
+  default-use-app-name: aps
+  mock:
+    enable: false
+  match:
+    passenger:
+      enable: true
+    driver:
+      enable: true
+  url-white-list:
+    - /loginAccount/login/phone/pwd
+    #    - /h2-console
+    #    - /fileUpload/getFileByte/
+    - /actuator
+    #    - /apsGoodsSaleProjectConfig/sale2project
+    #    - /districtCode
+    #    - /test/flow
+    #    - /camunda
+    #    - /basePreview/info
+  #    - /
+  #    - /uber/h3/geoToH3Address
+  redis-key:
+    user-token: ut_
+    login-lock: ll_
+  entity-package-name: com.olivia.peanut.portal.model
+  scan-property2-use-in-time-second: 60
+  sale2-project-thread-size: 3
+  aps:
+    forecast-main-prefix: MAIN-
+    forecast-main-suffix: 预测数据
+  orderStatusUpdateNeedDayCount: 60
+  # 钉钉配置， 不接入可不配置
+  ding-config-list:
+    - ding-code: msgNotice
+      ding-name: 消息通知
+      client-id: dingAppClientId
+      robot-code: dingAppKey
+      client-secret: dingAppSecret
+      agent-id: dingAppId
+      use-stream: true
+  # 钉钉配置， 不接入可不配置
+  server-notice-user-id-map:
+    common:
+      - 1
+    start:
+      - 1
+    end:
+      - 1
+  filter-table-list: # 数据条件过滤， 不配置则不区分数据，支持单值，多值匹配
+    - column-name: tenant_id
+      one-filter-value: true
+      data-permission-type: tenant_id  # 实现 DataPermissionService 接口， getType()值
+      ignore-path: # 先验证 , 支持通配符，oneFilterValue=true配置表名 ，=false配置mapperId
+        - t_district_code
+        - base_resource
+        - base_table_header
+        - t_file_upload
+        - t_login_account
+        - t_tenant_info
+
+      filter-path: # 后验证
+        - /
+db:
+  url: >
+    jdbc:mysql://localhost:3306/peanut_prod?useUnicode=true&characterEncoding=utf8
+    &useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    &allowMultiQueries=true&autoReconnect=true&rewriteBatchedStatements=true
+  username: root
+  password: root
+  mysql-driver: com.mysql.cj.jdbc.Driver
+  data-source-type: com.zaxxer.hikari.HikariDataSource
+
+
+spring:
+  mail:
+    # 参考 https://baijiahao.baidu.com/s?id=1695308391844521693&wfr=spider&for=pc
+    password: 邮箱授权码
+    username: 邮箱地址
+    host: 邮箱发送地址
+    port: 465
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+
+
+
+  application:
+    name: peanut-api
+  servlet:
+    multipart:
+      max-request-size: 5MB # 上传最大值
+      max-file-size: 5MB  # 单个文件最大值
+  profiles:
+    active: local
+  banner:
+    location: banner.txt
+  datasource:
+    hikari:
+      #      data-source-properties:
+      #        cachePrepStmts: true
+      #        prepStmtCacheSize: 250
+      #        prepStmtCacheSqlLimit: 2048
+      #        useServerPrepStmts: true
+      #最大连接数，小于等于0会被重置为默认值10；大于零小于1会被重置为minimum-idle的值
+      maximum-pool-size: 30
+      #最小空闲连接，默认值 10，小于0或大于maximum-pool-size，都会重置为maximum-pool-size
+      minimum-idle: 30
+      #连接超时时间:毫秒，小于250毫秒，否则被重置为默认值30秒
+      connection-timeout: 60000
+      #空闲连接超时时间，默认值600000ms（10分钟），大于等于max-lifetime且max-lifetime>0，会被重置为0；
+      #不等于0且小于10秒，会被重置为10秒。
+      #只有空闲连接数大于最大连接数且空闲时间超过该值，才会被释放(自动释放过期链接)
+      idle-timeout: 600000
+      #连接最大存活时间.不等于0且小于30秒，会被重置为默认值30分钟.设置应该比mysql设置的超时时间短
+      max-lifetime: 640000
+      #连接测试查询
+      connection-test-query: select 1
+      connection-init-sql: select 2
+      keepalive-time: 30000
+      validation-timeout: 3000
+      leakDetectionThreshold: 0
+
+
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: >
+      jdbc:mysql://
+      local:3306/peanut_prod
+      ?useUnicode=true
+      &characterEncoding=utf8
+      &useSSL=false
+      &serverTimezone=Asia/Shanghai
+      &allowPublicKeyRetrieval=true
+      &allowMultiQueries=true
+      &autoReconnect=true
+      &rewriteBatchedStatements=true
+    username: root
+    password: 123456
+    type: com.zaxxer.hikari.HikariDataSource
+
+  #  redis:
+  #    redisson:
+  #      file: classpath:redisson.yml
+  data:
+    redis:
+      database: 3
+      host: redis.com
+      password: admin!@#q123
+      timeout: 5000ms # 连接和读写超时时间设置为 5 秒
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+        shutdown-timeout: 100ms
+        client-options:
+          # 配置重试机制
+          retry:
+            # 最大重试次数
+            max-attempts: 3
+            # 重试间隔（毫秒）
+            interval-duration: 100ms
+
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml,classpath:/mapper/*/*.xml  # 指定 MyBatis Mapper XML 文件的位置
+  type-aliases-package: com.olivia.peanut.*.model  # 指定实体类所在包名
+
+
+logging:
+  level:
+    root: info
+    #    org.springframework: trace
+    "org.springframework.jdbc.core": debug
+    "org.apache.ibatis.logging.jdbc": debug
+    #    com.olivia.peanut.aps.utils.forecast: error
+    com.olivia.peanut.sdk: info
+#    com.zaxxer.hikari: trace
+
+
+#camunda:
+#  bpm:
+#    # 是否开启
+#    enabled: false
+#    auto-deployment-enabled: true
+#    admin-user:
+#      id: demo
+#      # admin 账户必须修改
+#      password: demo
+#      firstName: Demo
+#    webapp:
+#      enabled: true
+#      index-redirect-enabled: true
+
+
+ai-properties:
+  # https://www.volcengine.com/docs/82379/1399008
+  dou-bao:
+    api-key: ai-test
+    # https://www.volcengine.com/docs/82379/1302013
+    ark-base-url: ark.cn-beijing.volces.com
+    timeout: 3000
+    connect_timeout: 3000
+    retry-times: 3
+    max-idle-connections: 4
+    keep-alive-duration: 4
+
+
