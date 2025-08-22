@@ -22,6 +22,7 @@
     <module>peanut-flow</module>
     <module>peanut-task</module>
     <module>peanut-java-model</module>
+    <module>peanut-store</module>
   </modules>
 
   <properties>

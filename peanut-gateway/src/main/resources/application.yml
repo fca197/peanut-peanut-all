@@ -37,27 +37,8 @@ peanut:
   entity-package-name: com.olivia.peanut.portal.model
   scan-property2-use-in-time-second: 60
   sale2-project-thread-size: 3
-  aps:
-    forecast-main-prefix: MAIN-
-    forecast-main-suffix: 预测数据
   orderStatusUpdateNeedDayCount: 60
-  # 钉钉配置， 不接入可不配置
-  ding-config-list:
-    - ding-code: msgNotice
-      ding-name: 消息通知
-      client-id: dingAppClientId
-      robot-code: dingAppKey
-      client-secret: dingAppSecret
-      agent-id: dingAppId
-      use-stream: true
-  # 钉钉配置， 不接入可不配置
-  server-notice-user-id-map:
-    common:
-      - 1
-    start:
-      - 1
-    end:
-      - 1
+
   filter-table-list: # 数据条件过滤， 不配置则不区分数据，支持单值，多值匹配
     - column-name: tenant_id
       one-filter-value: true
@@ -73,6 +54,8 @@ peanut:
       filter-path: # 后验证
         - /
   ortools-so-path: /opt/java_lib_so/ortools-linux-x86-64/
+  # https://console.amap.com/dev/key/app 申请web 服务Key
+  gao-de-web-key:
 db:
   url: >
     jdbc:mysql://localhost:3306/peanut_prod?useUnicode=true&characterEncoding=utf8

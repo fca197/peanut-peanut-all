@@ -37,7 +37,7 @@ public class WebBeanConfig implements WebMvcConfigurer {
     List<String> whiteList = peanutProperties.getUrlWhiteList();
     if (!whiteList.isEmpty()) {
       interceptorRegistration.excludePathPatterns(whiteList.toArray(new String[0]));
-      log.info("已配置拦截器排除路径，共 {} 条", whiteList.size());
+      log.info("已配置拦截器排除路径，共 {} 条 whiteList: {}", whiteList.size(), whiteList);
     }
 
     log.info("WebHandlerInterceptor 已注册，拦截路径: /**");

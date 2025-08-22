@@ -17,9 +17,6 @@ public class ListKVTypeHandler extends ListMyBaseTypeHandler<List<KVEntity>> {
 
 
   private List<KVEntity> getListFromJSON(String val) {
-//    if (log.isDebugEnabled()) {
-//      log.debug("getListLongFromJSON: {}", val);
-//    }
     if (StringUtils.isBlank(val)) {
       return List.of();
     }

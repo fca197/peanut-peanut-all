@@ -4,6 +4,7 @@ package com.olivia.peanut.base.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.olivia.sdk.utils.BaseEntity;
+import com.uber.h3core.util.LatLng;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,8 @@ public class DistrictCode extends BaseEntity<DistrictCode> {
   // 0国,1省,2市,3区
   private Integer level;
   private String path;
+
+
 
   // 子节点
   @TableField(exist = false)

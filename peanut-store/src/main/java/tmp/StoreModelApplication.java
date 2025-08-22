@@ -1,5 +1,6 @@
 package tmp;
 
+import com.olivia.sdk.utils.MDCUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -8,9 +9,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-/***
- *
- */
 @Slf4j
 @EnableCaching
 //@EnableAspectJAutoProxy
@@ -19,16 +17,21 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @SpringBootApplication(scanBasePackages = "com.olivia")
 @EnableTransactionManagement
-
-public class BaseBootstrapApplication {
+public class StoreModelApplication {
 
   public static void main(String[] args) {
+
+    MDCUtils.initMdc();
     try {
-      log.info(">>>>>>>  BaseBootstrapApplication  start  >>>>>>>");
-      SpringApplication.run(BaseBootstrapApplication.class, args);
-      log.info(">>>>>>>  BaseBootstrapApplication  start success >>>>>>>");
+      log.info(">>>>>>>  StoreModelApplication  start  >>>>>>>");
+      SpringApplication.run(StoreModelApplication.class, args);
+      log.info(">>>>>>>  StoreModelApplication  start success >>>>>>>");
+
     } catch (Exception e) {
-      log.info(">>>>>>>  BaseBootstrapApplication  start fail >>>>>>> {}", e.getMessage(), e);
+
+      log.info(">>>>>>>  StoreModelApplication  start fail >>>>>>> {}", e.getMessage(), e);
     }
+
+    MDCUtils.clear();
   }
 }

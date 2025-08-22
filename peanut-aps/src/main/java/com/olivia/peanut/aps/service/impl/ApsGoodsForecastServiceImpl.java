@@ -570,7 +570,7 @@ public class ApsGoodsForecastServiceImpl extends MPJBaseServiceImpl<ApsGoodsFore
       forecastMain = new ApsGoodsForecastMain().setGoodsId(goodsForecast.getGoodsId()).setFactoryId(apsGoods.getFactoryId())
           .setForecastBeginDate(goodsForecast.getForecastBeginDate()).setForecastEndDate(goodsForecast.getForecastEndDate())
           .setForecastNo("main-" + DateUtil.format(new Date(), DatePattern.PURE_DATETIME_PATTERN))
-          .setForecastName(peanutProperties.getAps().getForecastMainPrefix() + apsGoods.getGoodsName() + peanutProperties.getAps().getForecastMainSuffix());
+          .setForecastName("main-" + apsGoods.getGoodsName() + "主版本");
       this.goodsForecastMainService.save(forecastMain);
     } else {
       this.goodsForecastMainService.update(

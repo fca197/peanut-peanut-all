@@ -75,10 +75,6 @@ public class PeanutProperties {
    */
   private String localFileUploadPath;
 
-  /**
-   * APS系统配置
-   */
-  private ApsProperties aps;
 
   /**
    * 销售转项目的线程池大小
@@ -121,6 +117,12 @@ public class PeanutProperties {
   private String licenseCode;
 
   private String ortoolsSoPath;
+
+  /***
+   * 高德web key
+   *  https://console.amap.com/dev/key/app  Web服务 类型
+   */
+  private String gaoDeWebKey;
 
   /**
    * 初始化后检查必要的配置参数 使用PostConstruct确保在依赖注入完成后执行
