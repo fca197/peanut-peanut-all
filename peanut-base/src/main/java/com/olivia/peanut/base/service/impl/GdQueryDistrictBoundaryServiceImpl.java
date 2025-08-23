@@ -56,17 +56,17 @@ public class GdQueryDistrictBoundaryServiceImpl implements QueryDistrictBoundary
     DistrictsDTO districtsDTO = districts.getFirst();
     String polyline = districtsDTO.getPolyline();
 
-
     if (StringUtils.isNotBlank(districtsDTO.getCenter())) {
       String[] center = districtsDTO.getCenter().split(",");
       ret.setCenterLat(center[1]).setCenterLng(center[0]);
     }
     ret.setDistrictName(districtsDTO.getName());
     Map<String, Object> beanToMap = BeanUtil.beanToMap(ret);
-    beanToMap.put("polyline", Arrays.stream(polyline.split("[;]")).map(t->t.split(",")).toList());
-    FileUtil.writeUtf8String(
-        "drawPolygon(\"" + areaCode + "\"," + JSON.toJSONString(beanToMap) + ")",
-        new File("/Users/wangbao/Documents/project/self/peanut-portal-all/peanut-web-store/public/geoJson/" + areaCode + ".js"));
+    beanToMap.put("polyline", Arrays.stream(polyline.split("[;]")).map(t -> t.split(",")).toList());
+
+
+    FileUtil.writeUtf8String(JSON.toJSONString(beanToMap),
+        new File(peanutProperties.getLocalFileUploadPath()+"/districtBoundary/" + areaCode + ".json"));
     return ret;
   }
 }

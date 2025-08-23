@@ -33,7 +33,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,11 +48,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class FileUploadApiImpl implements FileUploadApi {
 
-  private static final Predicate<String> SAFE_PATH = path -> !path.contains("..") && !Paths.get(
-      path).isAbsolute();
+  private static final Predicate<String> SAFE_PATH = path -> !path.contains("..");
   @Resource
   PeanutProperties peanutProperties;
-  private @Autowired FileUploadService fileUploadService;
+  private @Resource FileUploadService fileUploadService;
 
   /****
    * insert
@@ -91,8 +89,7 @@ public class FileUploadApiImpl implements FileUploadApi {
 
   }
 
-  public @Override DynamicsPage<FileUploadExportQueryPageListInfoRes> queryPageList(
-      FileUploadExportQueryPageListReq req) {
+  public @Override DynamicsPage<FileUploadExportQueryPageListInfoRes> queryPageList(FileUploadExportQueryPageListReq req) {
     return fileUploadService.queryPageList(req);
   }
 
@@ -100,14 +97,12 @@ public class FileUploadApiImpl implements FileUploadApi {
     DynamicsPage<FileUploadExportQueryPageListInfoRes> page = queryPageList(req);
     List<FileUploadExportQueryPageListInfoRes> list = page.getDataList();
     // 类型转换，  更换枚举 等操作
-    List<FileUploadExportQueryPageListInfoRes> listInfoRes = $.copyList(list,
-        FileUploadExportQueryPageListInfoRes.class);
+    List<FileUploadExportQueryPageListInfoRes> listInfoRes = $.copyList(list, FileUploadExportQueryPageListInfoRes.class);
     PoiExcelUtil.export(FileUploadExportQueryPageListInfoRes.class, listInfoRes, "");
   }
 
   public @Override FileUploadImportRes importData(@RequestParam("file") MultipartFile file) {
-    List<FileUploadImportReq> reqList = PoiExcelUtil.readData(file, new FileUploadImportListener(),
-        FileUploadImportReq.class);
+    List<FileUploadImportReq> reqList = PoiExcelUtil.readData(file, new FileUploadImportListener(), FileUploadImportReq.class);
     // 类型转换，  更换枚举 等操作
     List<FileUpload> readList = $.copyList(reqList, FileUpload.class);
     boolean bool = fileUploadService.saveBatch(readList);
@@ -116,8 +111,7 @@ public class FileUploadApiImpl implements FileUploadApi {
   }
 
   public @Override FileUploadQueryByIdListRes queryByIdListRes(FileUploadQueryByIdListReq req) {
-    MPJLambdaWrapper<FileUpload> q = new MPJLambdaWrapper<>(FileUpload.class).selectAll(
-        FileUpload.class).in(FileUpload::getId, req.getIdList());
+    MPJLambdaWrapper<FileUpload> q = new MPJLambdaWrapper<>(FileUpload.class).selectAll(FileUpload.class).in(FileUpload::getId, req.getIdList());
     List<FileUpload> list = this.fileUploadService.list(q);
     List<FileUploadDto> dataList = $.copyList(list, FileUploadDto.class);
     return new FileUploadQueryByIdListRes().setDataList(dataList);
@@ -127,14 +121,11 @@ public class FileUploadApiImpl implements FileUploadApi {
   public FileUploadInsertRes insertByType(String fileType, MultipartFile multipartFile) {
     fileType = StringUtils.firstNonEmpty(fileType, Str.DEFAULT);
     String filename = multipartFile.getOriginalFilename();
-    FileUpload fileUpload = new FileUpload().setFileType(fileType).setFileName(filename)
-        .setExpireTime("9999-12-31 23:59:59");
+    FileUpload fileUpload = new FileUpload().setFileType(fileType).setFileName(filename).setExpireTime("9999-12-31 23:59:59");
     fileUpload.setId(IdWorker.getId());
     fileUpload.setFileSuffix(FileUtil.extName(filename));
     LocalDate localDate = LocalDate.now();
-    String localDir =
-        peanutProperties.getLocalFileUploadPath() + "/" + fileType + "/" + localDate.getYear() + "/"
-            + localDate.getDayOfMonth() + "/";
+    String localDir = peanutProperties.getLocalFileUploadPath() + "/" + fileType + "/" + localDate.getYear() + "/" + localDate.getDayOfMonth() + "/";
     String localPath = localDir + IdWorker.getIdStr() + "." + fileUpload.getFileSuffix();
     FileUtil.mkParentDirs(localPath);
     try {
@@ -155,15 +146,13 @@ public class FileUploadApiImpl implements FileUploadApi {
     HttpServletResponse response = ReqResUtils.getResponse();
     FileUpload fileUpload = this.fileUploadService.getById(req.getId());
     $.requireNonNullCanIgnoreException(fileUpload, "文件不存在");
-    try (InputStream inputStream = new FileInputStream(
-        peanutProperties.getLocalFileUploadPath() + fileUpload.getLocalFilePath());
+    try (InputStream inputStream = new FileInputStream(peanutProperties.getLocalFileUploadPath() + fileUpload.getLocalFilePath());
         //
         ServletOutputStream outputStream = response.getOutputStream()) {
       response.reset();
       response.setContentType("application/octet-stream");
       String filename = fileUpload.getFileName();
-      response.addHeader("Content-Disposition",
-          "attachment; filename=" + URLEncoder.encode(filename, StandardCharsets.UTF_8));
+      response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, StandardCharsets.UTF_8));
       byte[] b = new byte[1024];
       int len;
       //从输入流中读取一定数量的字节，并将其存储在缓冲区字节数组中，读到末尾返回-1
@@ -180,34 +169,41 @@ public class FileUploadApiImpl implements FileUploadApi {
     downLoadPathFun(path);
   }
 
+  @Override
+  public String downLoadFileContent(String path) {
+    Path filePath = checkPathHas(path);
+    return FileUtil.readString(filePath.toFile(), StandardCharsets.UTF_8);
+  }
+
   @SneakyThrows
   private void downLoadPathFun(String path) {
     HttpServletResponse response = ReqResUtils.getResponse();
-    // 1. 对路径进行安全校验，防止目录遍历攻击
-    // 路径安全校验（使用字符串模板增强可读性）
+    Path filePath = checkPathHas(path);
+    if (filePath == null) {
+      return;
+    }
+    // 4. 设置响应头
+    response.setContentType(getResponseContentType(path.substring(filePath.toString().lastIndexOf(".") + 1)));
+    response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName() + "\"");
+    try (InputStream in = Files.newInputStream(filePath);//
+        OutputStream out = response.getOutputStream()) {
+      in.transferTo(out);
+    }
+  }
+
+  private Path checkPathHas(String path) {
     if (!SAFE_PATH.test(path)) {
       log.warn("SAFE_PATH error {}", path);
-//      response.sendError(HttpStatus.FORBIDDEN.value(), "不安全的文件路径: " + path);
-      return;
+      return null;
     }
     // 2. 构建完整的文件路径
     Path filePath = Paths.get(peanutProperties.getLocalFileUploadPath(), path);
     // 3. 检查文件是否存在
     if (!Files.exists(filePath) || Files.isDirectory(filePath)) {
-
       log.warn("filePath exits error {}", filePath);
-//      response.sendError(HttpStatus.NO_CONTENT.value(), "文件不存在: " + filePath);
-      return;
+      return null;
     }
-    // 4. 设置响应头
-    response.setContentType(
-        getResponseContentType(path.substring(filePath.toString().lastIndexOf(".") + 1)));
-    response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
-        "attachment; filename=\"" + filePath.getFileName() + "\"");
-    try (InputStream in = Files.newInputStream(filePath);//
-        OutputStream out = response.getOutputStream()) {
-      in.transferTo(out);
-    }
+    return filePath;
   }
 
   @Override
@@ -236,11 +232,9 @@ public class FileUploadApiImpl implements FileUploadApi {
     FileUpload fileUpload = this.fileUploadService.getById(id);
     $.requireNonNullCanIgnoreException(fileUpload, "文件不存在");
     HttpServletResponse response = ReqResUtils.getResponse();
-    try (FileInputStream fis = new FileInputStream(
-        peanutProperties.getLocalFileUploadPath() + fileUpload.getLocalFilePath())) {
+    try (FileInputStream fis = new FileInputStream(peanutProperties.getLocalFileUploadPath() + fileUpload.getLocalFilePath())) {
       response.setContentType(getResponseContentType(fileUpload.getFileSuffix()));
-      fis.getChannel()
-          .transferTo(0, fis.available(), Channels.newChannel(response.getOutputStream()));
+      fis.getChannel().transferTo(0, fis.available(), Channels.newChannel(response.getOutputStream()));
     } catch (Exception e) {
       log.error("文件读取失败 {}", e.getMessage(), e);
       throw new CanIgnoreException(e);

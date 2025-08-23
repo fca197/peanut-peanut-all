@@ -83,6 +83,9 @@ public interface FileUploadApi {
   @GetMapping("/fileUpload/downLoad/path")
   void downLoadFilePath(@RequestParam("path") String path);
 
+  @GetMapping("/fileUpload/downLoad/content")
+  String downLoadFileContent(@RequestParam("path") String path);
+
   @PostMapping("/fileUpload/getFileBase64")
   GetFileBase64Res getFileBase64(@RequestBody @Valid GetFileBase64Req req);
 

@@ -4,6 +4,7 @@ package com.olivia.peanut.base.model;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.olivia.sdk.utils.BaseEntity;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,12 +25,40 @@ public class DistrictCode extends BaseEntity<DistrictCode> {
 
   @TableField(exist = false)
   public static final String MAX_PARENT_CODE = "000000";
+
+  @TableField(value = "code")
   private String code;
+  /***
+   *  城市编码
+   */
+  @TableField(value = "city_code")
+  private String cityCode;
+  @TableField(value = "name")
   private String name;
+  @TableField(value = "parent_code")
   private String parentCode;
-  // 0国,1省,2市,3区
-  private Integer level;
+  /***
+   *  路径
+   */
+  @TableField(value = "path")
   private String path;
+  @TableField(value = "level")
+  private Integer level;
+  /***
+   *  经度
+   */
+  @TableField(value = "center_lng")
+  private BigDecimal centerLng;
+  /***
+   *  纬度
+   */
+  @TableField(value = "center_lat")
+  private BigDecimal centerLat;
+  /***
+   *  纬度
+   */
+  @TableField(value = "path_name")
+  private String pathName;
 
 
   // 子节点
