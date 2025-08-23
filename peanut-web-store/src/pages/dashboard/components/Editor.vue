@@ -5,7 +5,7 @@ import SvgDashboard from "../images/dashboard.svg?component" // vite-svg-loader 
 <template>
   <div class="app-container center">
     <SvgDashboard class="svg"/>
-    <p>欢迎使用<span class="domainSpanClass">APS</span>高级排产排程系统</p>
+    <p>欢迎使用<span class="domainSpanClass">门店</span>高级开店系统</p>
   </div>
 </template>
 

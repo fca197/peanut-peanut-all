@@ -18,10 +18,10 @@ const {isTop} = useLayoutMode()
        :class="{ 'collapse': props.collapse, 'layout-mode-top': isTop }">
     <transition name="layout-logo-fade">
       <router-link v-if="props.collapse" key="collapse" to="/">
-        <span class="logoTitle_MIN">APS</span>
+        <span class="logoTitle_MIN">门店</span>
       </router-link>
       <router-link v-else key="expand" to="/">
-        <span class="logoTitle">APS</span>
+        <span class="logoTitle">门店</span>
       </router-link>
     </transition>
   </div>

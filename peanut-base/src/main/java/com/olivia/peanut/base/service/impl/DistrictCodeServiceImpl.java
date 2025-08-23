@@ -15,9 +15,7 @@ import com.olivia.peanut.base.model.DistrictCode;
 import com.olivia.peanut.base.service.DistrictCodeService;
 import com.olivia.sdk.ann.SetUserName;
 import com.olivia.sdk.comment.ServiceComment;
-import com.olivia.sdk.utils.$;
-import com.olivia.sdk.utils.DynamicsPage;
-import com.olivia.sdk.utils.FieldUtils;
+import com.olivia.sdk.utils.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -46,7 +44,10 @@ public class DistrictCodeServiceImpl extends MPJBaseServiceImpl<DistrictCodeMapp
 
     List<DistrictCodeDto> dataList = list.stream().map(t -> $.copy(t, DistrictCodeDto.class)).collect(Collectors.toList());
     //  this.setName(dataList);
-    return new DistrictCodeQueryListRes().setDataList(dataList);
+
+    List<DistrictCodeDto> retList = ListToTreeUtil.builder(DistrictCodeDto::getCode, DistrictCodeDto::getParentCode, DistrictCodeDto::getChildren,
+        DistrictCodeDto::setChildren, DistrictCode.MAX_PARENT_CODE).convert(dataList);
+    return new DistrictCodeQueryListRes().setDataList(retList);
   }
 
 
@@ -114,12 +115,12 @@ public class DistrictCodeServiceImpl extends MPJBaseServiceImpl<DistrictCodeMapp
     Map<String, String> codeNameMap = this.list(new LambdaQueryWrapper<DistrictCode>().in(DistrictCode::getCode, codeList)).stream()
         .collect(Collectors.toMap(DistrictCode::getCode, DistrictCode::getName));
 
-    list.forEach(v -> {
-      selectTypeList.stream().forEach(s -> {
+    for (Object v : list) {
+      selectTypeList.forEach(s -> {
         ReflectUtil.setFieldValue(v, FieldUtils.getField(v, s.getShowFieldName()),
             codeNameMap.get(FieldUtils.getFieldValue(v, FieldUtils.getField(v, s.name()))));
       });
-    });
+    }
 
   }
 

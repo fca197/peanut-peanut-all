@@ -45,7 +45,7 @@ public class DistrictCodeBoundaryApiImpl implements DistrictCodeBoundaryApi {
    */
   public @Override DistrictCodeBoundaryInsertRes insert(DistrictCodeBoundaryInsertReq req) {
     DistrictCodeBoundary districtCodeBoundary = INSTANCE.insertReq(req);
-    this.districtCodeBoundaryService.save(districtCodeBoundary);
+    this.districtCodeBoundaryService.saveBoundary(districtCodeBoundary);
     return new DistrictCodeBoundaryInsertRes().setCount(1);
   }
 

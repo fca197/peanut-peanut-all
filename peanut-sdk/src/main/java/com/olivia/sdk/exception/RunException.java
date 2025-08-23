@@ -40,6 +40,10 @@ public class RunException extends RuntimeException {
     this(500, message, null);
   }
 
+  public RunException(String... message) {
+    this(500, String.join("", message), null);
+  }
+
   /**
    * 构造一个带错误码和消息的业务异常
    *

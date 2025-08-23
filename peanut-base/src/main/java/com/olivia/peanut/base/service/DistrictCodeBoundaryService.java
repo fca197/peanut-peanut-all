@@ -1,12 +1,10 @@
 package com.olivia.peanut.base.service;
 
-import com.olivia.sdk.utils.DynamicsPage;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.olivia.peanut.base.model.DistrictCodeBoundary;
-import java.util.List;
 import com.github.yulichang.base.MPJBaseService;
-
 import com.olivia.peanut.base.api.entity.districtCodeBoundary.*;
+import com.olivia.peanut.base.model.DistrictCodeBoundary;
+import com.olivia.sdk.utils.DynamicsPage;
+import java.util.List;
 
 /**
  * 地区边界(DistrictCodeBoundary)表服务接口
@@ -22,5 +20,7 @@ public interface DistrictCodeBoundaryService extends MPJBaseService<DistrictCode
 
 
   void setName(List<? extends DistrictCodeBoundaryDto> districtCodeBoundaryDtoList);
+
+  List<DistrictCodeBoundary> saveBoundary(DistrictCodeBoundary districtCodeBoundary);
 }
 

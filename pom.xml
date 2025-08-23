@@ -10,7 +10,7 @@
     <groupId>org.springframework.boot</groupId>
     <version>3.5.4</version>
   </parent>
-  <artifactId>peanut-protal-all</artifactId>
+  <artifactId>peanut-portal-all</artifactId>
   <version>3.0.0-20250821-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>

@@ -46,6 +46,15 @@ export default defineConfig(({ mode }) => {
           ws: true,
           // 是否允许跨域
           changeOrigin: true
+        },
+        "/_AMapService": {
+          target: "https://restapi.amap.com/",
+          ws: true,
+          changeOrigin: true,
+          rewrite: (path) => {
+            const hasQuery = path.includes('?');
+            return `${path}${hasQuery ? '&' : '?'}jscode=057b3103be496d0e647d8238567cfe02`;
+          }
         }
       },
       // 是否允许跨域

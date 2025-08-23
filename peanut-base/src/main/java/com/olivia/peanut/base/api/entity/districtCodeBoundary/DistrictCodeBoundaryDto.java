@@ -1,21 +1,16 @@
 package com.olivia.peanut.base.api.entity.districtCodeBoundary;
 
 import com.olivia.peanut.portal.api.entity.BaseEntityDto;
-import com.olivia.sdk.ann.InsertCheck;
 import com.olivia.sdk.ann.UpdateCheck;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-//import com.alibaba.fastjson2.annotation.JSONField;
 
 /**
  * 地区边界(DistrictCodeBoundary)查询对象返回
  *
  * @author admin
- * @since 2025-08-22 13:33:38
+ * @since 2025-08-23 17:50:17
  */
 //@Accessors(chain=true)
 @Getter
@@ -26,33 +21,28 @@ public class DistrictCodeBoundaryDto extends BaseEntityDto {
   /***
    *  区域编码
    */
-  @NotBlank(message = "区域编码不能为空", groups = {InsertCheck.class, UpdateCheck.class})
-  //  @JSONField(label = "districtCode")
+  @NotBlank(message = "区域编码不能为空", groups = {UpdateCheck.class})
   private String districtCode;
   /***
-   *  经度（Longitude）-180～180
+   *  区域名称
    */
-  @NotBlank(message = "经度（Longitude）-180～180不能为空", groups = {InsertCheck.class, UpdateCheck.class})
-  //  @JSONField(label = "lngList")
-  private List<String> lngList;
+  @NotBlank(message = "区域名称不能为空", groups = {UpdateCheck.class})
+  private String districtName;
   /***
-   *  纬度（Latitude）0～90
+   *  边界
    */
-  @NotBlank(message = "纬度（Latitude）0～90不能为空", groups = {InsertCheck.class, UpdateCheck.class})
-  //  @JSONField(label = "latList")
-  private List<String> latList;
+  @NotBlank(message = "边界不能为空", groups = {UpdateCheck.class})
+  private String polyline;
   /***
-   *  中心纬度
+   *  纬度
    */
-  //  @JSONField(label = "centerLat")
-  @NotNull(message = "中心纬度不能为空", groups = {InsertCheck.class, UpdateCheck.class})
-  private BigDecimal centerLat;
+  @NotBlank(message = "纬度不能为空", groups = {UpdateCheck.class})
+  private String centerLat;
   /***
-   *  中心经度
+   *  经度
    */
-  //  @JSONField(label = "centerLon")
-  @NotNull(message = "中心经度不能为空", groups = {InsertCheck.class, UpdateCheck.class})
-  private BigDecimal centerLon;
+  @NotBlank(message = "经度不能为空", groups = {UpdateCheck.class})
+  private String centerLng;
 
 }
 

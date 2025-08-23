@@ -21,5 +21,7 @@ import java.time.LocalDateTime;
 public class DistrictCodeBoundaryQueryListReq {
 
   private DistrictCodeBoundaryDto data;
+
+  private String parentCode;
 }
 

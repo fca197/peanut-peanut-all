@@ -138,7 +138,7 @@ export const useWebSocket = () => {
   // 生命周期管理
   onMounted(() => {
     console.log("onMounted used")
-    webSocketConnect()
+    // webSocketConnect()
   })
 
   onBeforeUnmount(() => {

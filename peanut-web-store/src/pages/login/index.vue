@@ -86,33 +86,33 @@ onMounted(() => {
     <Owl :close-eyes="isFocus"/>
     <div class="login-card">
       <div class="title">
-        <span class="spanAps">APS</span>
-        <span class="spanDesc">高级排产排程系统</span>
+        <span class="spanAps">门店</span>
+        <span class="spanDesc">高级开店系统</span>
       </div>
       <div class="content">
         <el-form ref="loginFormRef" :model="loginFormData" :rules="loginFormRules"
                  @keyup.enter="handleLogin">
           <el-form-item prop="username">
             <el-input
-              v-model.trim="loginFormData.username"
-              placeholder="用户名"
-              type="text"
-              tabindex="1"
-              :prefix-icon="User"
-              size="large"
+                v-model.trim="loginFormData.username"
+                placeholder="用户名"
+                type="text"
+                tabindex="1"
+                :prefix-icon="User"
+                size="large"
             />
           </el-form-item>
           <el-form-item prop="password">
             <el-input
-              v-model.trim="loginFormData.password"
-              placeholder="密码"
-              type="password"
-              tabindex="2"
-              :prefix-icon="Lock"
-              size="large"
-              show-password
-              @blur="handleBlur"
-              @focus="handleFocus"
+                v-model.trim="loginFormData.password"
+                placeholder="密码"
+                type="password"
+                tabindex="2"
+                :prefix-icon="Lock"
+                size="large"
+                show-password
+                @blur="handleBlur"
+                @focus="handleFocus"
             />
           </el-form-item>
           <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">
@@ -120,8 +120,8 @@ onMounted(() => {
           </el-button>
           <div style="margin-top: 15px; text-align: right; font-size: 15px">
             浏览器下载： <a
-            href="https://www.google.cn/chrome/next-steps.html?installdataindex=empty"
-            style="color: #00bb99">Google Chrome</a>
+              href="https://www.google.cn/chrome/next-steps.html?installdataindex=empty"
+              style="color: #00bb99">Google Chrome</a>
           </div>
         </el-form>
       </div>
@@ -158,17 +158,17 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       font-weight: 600;
-
+      line-height: 60px;
       .spanAps {
-        height: 100px;
-        line-height: 100px;
-        margin: 10px;
+        height: 40px;
+        line-height: 40px;
         color: red;
-        font-size: 90px;
+        font-size: 40px;
+        margin-right: 20px;
       }
 
       .spanDesc {
-        margin-top: 60px;
+        margin-top: 20px;
       }
     }
 

@@ -9,9 +9,19 @@
   <script src="/detect-ie.js" defer></script>
 </head>
 <body>
+<script>
+  const gdKey = "67282e2715fed3660daaffcab9090a77";
+  window.gdKey = gdKey;
+  window._AMapSecurityConfig = {
+    // securityJsCode: gdKey,
+    serviceHost:'http://localhost:80/_AMapService',
+  };
+  console.info("gaode Key ", gdKey)
+</script>
 <div id="app">
   <div id="app-loading"></div>
 </div>
 <script type="module" src="/src/main.ts"></script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 package com.olivia.peanut.base.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yulichang.base.MPJBaseService;
 import com.olivia.peanut.base.api.entity.districtCode.*;
 import com.olivia.peanut.base.api.enums.DistrictCodeSelectType;
@@ -18,6 +19,10 @@ import java.util.Map;
 public interface DistrictCodeService extends MPJBaseService<DistrictCode> {
 
   DistrictCodeQueryListRes queryList(DistrictCodeQueryListReq req);
+
+  default List<DistrictCode> getDistrictCodesByParentCode(String code) {
+    return this.list(new LambdaQueryWrapper<DistrictCode>().eq(DistrictCode::getParentCode, code));
+  }
 
   DynamicsPage<DistrictCodeExportQueryPageListInfoRes> queryPageList(DistrictCodeExportQueryPageListReq req);
 

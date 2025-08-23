@@ -1,32 +1,28 @@
 package com.olivia.peanut.base.service.impl;
 
-import org.springframework.aop.framework.AopContext;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.thread.ThreadUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.yulichang.base.MPJBaseServiceImpl;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.olivia.peanut.base.api.entity.districtCodeBoundary.*;
+import com.olivia.peanut.base.converter.DistrictCodeBoundaryConverter;
+import com.olivia.peanut.base.mapper.DistrictCodeBoundaryMapper;
+import com.olivia.peanut.base.model.DistrictCode;
+import com.olivia.peanut.base.model.DistrictCodeBoundary;
+import com.olivia.peanut.base.service.*;
+import com.olivia.sdk.ann.RedissonLockAnn;
+import com.olivia.sdk.service.SetNameService;
+import com.olivia.sdk.utils.*;
 import jakarta.annotation.Resource;
-import com.olivia.sdk.utils.$;
-import com.olivia.sdk.utils.LambdaQueryUtil;
-import com.olivia.sdk.utils.DynamicsPage;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.olivia.peanut.base.mapper.DistrictCodeBoundaryMapper;
-import com.olivia.peanut.base.model.DistrictCodeBoundary;
-import com.olivia.peanut.base.converter.DistrictCodeBoundaryConverter;
-import com.olivia.peanut.base.service.DistrictCodeBoundaryService;
-import cn.hutool.core.collection.CollUtil;
-import com.olivia.peanut.base.service.BaseTableHeaderService;
-import com.olivia.sdk.utils.BaseEntity;
-import com.olivia.peanut.base.api.entity.districtCodeBoundary.*;
-import com.olivia.sdk.service.SetNameService;
 
 /**
  * 地区边界(DistrictCodeBoundary)表服务实现类
@@ -45,12 +41,22 @@ public class DistrictCodeBoundaryServiceImpl extends MPJBaseServiceImpl<District
   @Resource
   SetNameService setNameService;
 
+  @Resource
+  QueryDistrictBoundaryService queryDistrictBoundaryService;
+
+  @Resource
+  DistrictCodeService districtCodeService;
 
   public @Override DistrictCodeBoundaryQueryListRes queryList(DistrictCodeBoundaryQueryListReq req) {
 
-    MPJLambdaWrapper<DistrictCodeBoundary> q = getWrapper(req.getData());
-    List<DistrictCodeBoundary> list = this.list(q);
+    List<DistrictCode> districtCodeList = this.districtCodeService.getDistrictCodesByParentCode(req.getParentCode());
 
+    if (CollUtil.isEmpty(districtCodeList)) {
+      return new DistrictCodeBoundaryQueryListRes();
+    }
+    List<String> codeList = districtCodeList.stream().map(DistrictCode::getCode).toList();
+    MPJLambdaWrapper<DistrictCodeBoundary> q = new MPJLambdaWrapper<>(DistrictCodeBoundary.class).in(DistrictCodeBoundary::getDistrictCode, codeList);
+    List<DistrictCodeBoundary> list = this.list(q);
     List<DistrictCodeBoundaryDto> dataList = DistrictCodeBoundaryConverter.INSTANCE.queryListRes(list);
     ((DistrictCodeBoundaryService) AopContext.currentProxy()).setName(dataList);
     return new DistrictCodeBoundaryQueryListRes().setDataList(dataList);
@@ -78,6 +84,39 @@ public class DistrictCodeBoundaryServiceImpl extends MPJBaseServiceImpl<District
     return DynamicsPage.init(page, records);
   }
 
+  @Override
+  @RedissonLockAnn(keyExpression = "#req.districtCode")
+  public List<DistrictCodeBoundary> saveBoundary(DistrictCodeBoundary req) {
+    List<DistrictCodeBoundary> saveList = new ArrayList<>();
+
+//    DistrictCodeBoundary districtCodeBoundary = this.getOne(
+//        new LambdaQueryWrapper<>(DistrictCodeBoundary.class).eq(DistrictCodeBoundary::getDistrictCode, req.getDistrictCode()));
+//    if (Objects.nonNull(districtCodeBoundary)) {
+//      return saveList;
+//    }
+
+    List<DistrictCode> districtCodeList = this.districtCodeService.getDistrictCodesByParentCode(req.getDistrictCode());
+    List<String> codeList = districtCodeList.stream().map(DistrictCode::getCode).collect(Collectors.toList());
+    codeList.add(req.getDistrictCode());
+
+    Set<String> hasCodeSet = this.list(
+            new LambdaQueryWrapper<>(DistrictCodeBoundary.class).select(DistrictCodeBoundary::getDistrictCode).in(DistrictCodeBoundary::getDistrictCode, codeList)).stream()
+        .map(DistrictCodeBoundary::getDistrictCode).collect(Collectors.toSet());
+
+    codeList.removeIf(hasCodeSet::contains);
+
+    if (CollUtil.isNotEmpty(codeList)) {
+      codeList.forEach(code -> {
+        ThreadUtil.sleep(500);
+        DistrictCodeBoundary tmp = this.queryDistrictBoundaryService.queryDistrictCodeFormMap(code);
+//        saveList.add(tmp);
+      });
+//      this.saveBatch(saveList);
+
+    }
+    return saveList;
+  }
+
   // 以下为私有对象封装
 
   public @Override void setName(List<? extends DistrictCodeBoundaryDto> list) {
@@ -95,12 +134,6 @@ public class DistrictCodeBoundaryServiceImpl extends MPJBaseServiceImpl<District
         // 查询条件
         , BaseEntity::getId // id
         , DistrictCodeBoundary::getDistrictCode // 区域编码
-        , DistrictCodeBoundary::getLngList // 经度（Longitude）-180～180
-        , DistrictCodeBoundary::getLatList // 纬度（Latitude）0～90
-        , DistrictCodeBoundary::getCenterLat // 中心纬度
-        , DistrictCodeBoundary::getCenterLon // 中心经度
-        , DistrictCodeBoundary::getCreateUserName // 创建人姓名
-        , DistrictCodeBoundary::getUpdateUserName // 修改人姓名
     );
 
     q.orderByDesc(DistrictCodeBoundary::getId);

@@ -2,10 +2,8 @@ package com.olivia.peanut.base.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.olivia.sdk.mybatis.type.impl.ListStringTypeHandler;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.olivia.sdk.utils.BaseEntity;
-import java.math.BigDecimal;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,13 +12,14 @@ import lombok.experimental.Accessors;
  * 地区边界(DistrictCodeBoundary)表实体类
  *
  * @author admin
- * @since 2025-08-22 13:33:38
+ * @since 2025-08-23 17:50:15
  */
 @Accessors(chain = true)
 @Getter
 @Setter
 //@SuppressWarnings("serial")
-@TableName(value = "t_district_code_boundary",autoResultMap = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@TableName(value = "t_district_code_boundary")
 public class DistrictCodeBoundary extends BaseEntity<DistrictCodeBoundary> {
 
   /***
@@ -29,25 +28,25 @@ public class DistrictCodeBoundary extends BaseEntity<DistrictCodeBoundary> {
   @TableField(value = "district_code")
   private String districtCode;
   /***
-   *  经度（Longitude）-180～180
+   *  区域名称
    */
-  @TableField(value = "lng_list", typeHandler = ListStringTypeHandler.class)
-  private List<String> lngList;
+  @TableField(value = "district_name")
+  private String districtName;
   /***
-   *  纬度（Latitude）0～90
+   *  边界
    */
-  @TableField(value = "lat_list", typeHandler = ListStringTypeHandler.class)
-  private List<String> latList;
+  @TableField(value = "polyline")
+  private String polyline;
   /***
-   *  中心纬度
+   *  纬度
    */
   @TableField(value = "center_lat")
-  private BigDecimal centerLat;
+  private String centerLat;
   /***
-   *  中心经度
+   *  经度
    */
-  @TableField(value = "center_lon")
-  private BigDecimal centerLon;
+  @TableField(value = "center_lng")
+  private String centerLng;
 
 }
 

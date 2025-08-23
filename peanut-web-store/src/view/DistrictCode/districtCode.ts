@@ -1,0 +1,31 @@
+import {postResultInfoList} from "@@/utils/common-js.ts";
+
+export function queryDistrictCode(parentCode: string): Promise<DistrictCode[]> {
+
+  return postResultInfoList("/districtCode/queryList", {
+    data: {parentCode}
+  });
+}
+
+export interface DistrictCode {
+  id?: string | undefined
+  code?: string | undefined
+  cityCode?: string | undefined
+  name?: string | undefined
+  parentCode?: string | undefined
+  path?: string | undefined
+  level?: string | undefined
+  centerLng?: string | undefined
+  centerLat?: string | undefined
+  pathName?: string | undefined
+  isDelete?: string | undefined
+  createTime?: string | undefined
+  createBy?: string | undefined
+  updateTime?: string | undefined
+  updateBy?: string | undefined
+  traceId?: string | undefined
+  versionNum?: string | undefined
+  tenantId?: string | undefined
+  createUserName?: string | undefined
+  updateUserName?: string | undefined
+}
