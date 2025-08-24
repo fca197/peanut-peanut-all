@@ -2,10 +2,10 @@ package com.olivia.peanut.store.converter;
 
 import com.olivia.peanut.store.api.entity.storePoi.*;
 import com.olivia.peanut.store.model.StorePoi;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
-
 import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface StorePoiConverter {

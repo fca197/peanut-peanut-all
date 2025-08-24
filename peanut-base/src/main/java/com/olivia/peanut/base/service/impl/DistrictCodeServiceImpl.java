@@ -117,8 +117,7 @@ public class DistrictCodeServiceImpl extends MPJBaseServiceImpl<DistrictCodeMapp
 
     for (Object v : list) {
       selectTypeList.forEach(s -> {
-        ReflectUtil.setFieldValue(v, FieldUtils.getField(v, s.getShowFieldName()),
-            codeNameMap.get(FieldUtils.getFieldValue(v, FieldUtils.getField(v, s.name()))));
+        ReflectUtil.setFieldValue(v, FieldUtils.getField(v, s.getShowFieldName()), codeNameMap.get(FieldUtils.getFieldValue(v, FieldUtils.getField(v, s.name()))));
       });
     }
 
@@ -127,14 +126,12 @@ public class DistrictCodeServiceImpl extends MPJBaseServiceImpl<DistrictCodeMapp
   private MPJLambdaWrapper<DistrictCode> getWrapper(DistrictCodeDto obj) {
     MPJLambdaWrapper<DistrictCode> q = new MPJLambdaWrapper<>();
 
+    q.select(DistrictCode::getCode, DistrictCode::getName, DistrictCode::getParentCode);
     if (Objects.nonNull(obj)) {
-      q
-          .eq(StringUtils.isNoneBlank(obj.getCode()), DistrictCode::getCode, obj.getCode())
-          .eq(StringUtils.isNoneBlank(obj.getName()), DistrictCode::getName, obj.getName())
+      q.eq(StringUtils.isNoneBlank(obj.getCode()), DistrictCode::getCode, obj.getCode()).eq(StringUtils.isNoneBlank(obj.getName()), DistrictCode::getName, obj.getName())
           .eq(StringUtils.isNoneBlank(obj.getParentCode()), DistrictCode::getParentCode, obj.getParentCode())
           .eq(Objects.nonNull(obj.getLevel()), DistrictCode::getLevel, obj.getLevel())
-
-      ;
+          .in(CollUtil.isNotEmpty(obj.getLevelList()), DistrictCode::getLevel, obj.getLevelList());
     }
     q.orderByAsc(DistrictCode::getCode);
     return q;

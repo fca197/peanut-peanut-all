@@ -9,15 +9,21 @@
   <script src="/detect-ie.js" defer></script>
 </head>
 <body>
+
 <script>
   const gdKey = "67282e2715fed3660daaffcab9090a77";
   window.gdKey = gdKey;
   window._AMapSecurityConfig = {
     // securityJsCode: gdKey,
-    serviceHost:'http://localhost:80/_AMapService',
+    serviceHost: 'http://localhost:3333/_AMapService',
   };
-  console.info("gaode Key ", gdKey)
+  // console.info("gaode Key ", gdKey)
 </script>
+
+<!-- 1. 加载高德高德地图核心库 -->
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=67282e2715fed3660daaffcab9090a77"></script>
+
+<script src="https://webapi.amap.com/ui/1.1/main.js"></script>
 <div id="app">
   <div id="app-loading"></div>
 </div>

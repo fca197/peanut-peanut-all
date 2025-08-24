@@ -1,6 +1,7 @@
 package com.olivia.peanut.base.api.entity.districtCode;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.olivia.peanut.portal.api.entity.BaseEntityDto;
 import com.olivia.sdk.ann.InsertCheck;
 import com.olivia.sdk.ann.UpdateCheck;
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 //@SuppressWarnings("serial")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DistrictCodeDto extends BaseEntityDto {
 
   @NotBlank(message = "${column.comment}不能为空", groups = {InsertCheck.class, UpdateCheck.class})
@@ -34,6 +36,8 @@ public class DistrictCodeDto extends BaseEntityDto {
   private String name;
   @NotBlank(message = "${column.comment}不能为空", groups = {InsertCheck.class, UpdateCheck.class})
   private String parentCode;
+
+  private List<Integer> levelList;
   /***
    *  路径
    */

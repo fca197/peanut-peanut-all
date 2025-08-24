@@ -40,3 +40,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/main/java/com/olivia/peanut/store/vue/

@@ -19,14 +19,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @SpringBootApplication
 @EnableTransactionManagement
-public class BootstrapApplication {
+public class PortalBootstrapApplication {
 
   public static void main(String[] args) {
     try {
-      SpringApplication.run(BootstrapApplication.class, args);
-      log.info(">>>>>>>  BootstrapApplication  start success >>>>>>>");
+      SpringApplication.run(PortalBootstrapApplication.class, args);
+      log.info(">>>>>>>  PortalBootstrapApplication  start success >>>>>>>");
     } catch (Exception e) {
-      log.info(">>>>>>>  BootstrapApplication  start fail >>>>>>> {}", e.getMessage(), e);
+      log.info(">>>>>>>  PortalBootstrapApplication  start fail >>>>>>> {}", e.getMessage(), e);
     }
   }
 }

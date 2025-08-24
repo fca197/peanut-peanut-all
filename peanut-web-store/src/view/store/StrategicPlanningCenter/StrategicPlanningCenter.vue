@@ -1,48 +1,33 @@
 <script setup lang="ts">
-import AMapLoader from "@amap/amap-jsapi-loader";
-
 import {DistrictCode, queryDistrictCode} from "@v/DistrictCode/districtCode.ts";
 import {postNoResult} from "@@/utils/common-js.ts";
 
 const loadData = ref<boolean>(true);
 const gdMap = ref(null);
+const districtExplorerRef = ref(null);
 const loadAMap = () => {
-  console.log("loadAMap key", window.gdKey);
-  AMapLoader.load({
-    plugins: ["AMap.Scale", "AMap.ElasticMarker", "AMap.Geolocation", "AMap.TileLayer", "AMap.Polygon"],
-    key: window.gdKey, //申请好的Web端开发者 Key，调用 load 时必填
-    version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
-  })
-  .then((AMap) => {
-    gdMap.value = new AMap.Map("container", {
-      zoom: 5,
-      center: [108.867694, 34.899997],
-      renderOptions: {
-        canvasContext: {
-          // 启用 willReadFrequently，消除 getImageData 警告
-          willReadFrequently: true
-        }
-      }
-    });
-  })
-  .catch((e) => {
-    console.error(e); //加载错误提示
-  }).then(r => loadData.value = false);
+
+  gdMap.value = new AMap.Map("container", {
+    zoom: 4,
+    center: [108.867694, 30.899997],
+  });
 }
+
 
 const districtCodeList = ref<DistrictCode[]>([]);
 onMounted(async () => {
-  queryDistrictCode(undefined).then((list) => {
+  queryDistrictCode(undefined, [0, 1, 2, 3]).then((list) => {
     districtCodeList.value = list;
-    loadBoundary(list[0])
   })
   loadAMap()
   console.info("loadAMap mounted");
+  window.AMapUI.load(['ui/geo/DistrictExplorer', 'lib/$'], function (DistrictExplorer, $) {
+    //创建一个实例
+    initPage(DistrictExplorer);
+  })
 })
 
-const districtCodeClick = (data) => {
-  loadBoundary(data)
-}
+
 const downLoadBoundary = (data) => {
   console.log("downLoadBoundary ", data);
   postNoResult("/districtCodeBoundary/insert", {
@@ -51,53 +36,77 @@ const downLoadBoundary = (data) => {
   })
 }
 
-function getRandomLightColor(options = {}) {
-  // 默认配置：确保生成浅色的核心参数
-  const {
-    minHue = 0,
-    maxHue = 360,
-    minSaturation = 20,
-    maxSaturation = 60,
-    minLightness = 70,
-    maxLightness = 90
-  } = options;
-
-  // 生成随机色相（0-360，决定颜色基调）
-  const hue = Math.random() * (maxHue - minHue) + minHue;
-
-  // 生成随机饱和度（20%-60%，避免过灰或过鲜艳）
-  const saturation = Math.random() * (maxSaturation - minSaturation) + minSaturation;
-
-  // 生成随机明度（70%-90%，核心参数：确保颜色为浅色）
-  const lightness = Math.random() * (maxLightness - minLightness) + minLightness;
-
-  // 格式化并返回HSL颜色字符串（保留1位小数）
-  return `hsl(${hue.toFixed(1)}, ${saturation.toFixed(1)}%, ${lightness.toFixed(1)}%)`;
-}
-
-window.drawPolygon = function (code, data) {
-  console.log(code + ": " + data.districtName);
-  const polygon = new AMap.Polygon({
-    strokeWeight: 1,
-    path: data.polyline,
-    fillOpacity: 0.4,
-    fillColor: getRandomLightColor(),
-    strokeColor: '#0091ea'
+function initPage(DistrictExplorer) {
+  console.log(DistrictExplorer);
+  //创建一个实例
+  var districtExplorer = new DistrictExplorer({
+    map: gdMap.value //关联的地图实例
   });
-  gdMap.value.add(polygon);
+
+  districtExplorerRef.value = districtExplorer;
+  var adcode = 100000; //全国的区划编码
+  // var adcode = 370000
+  draw(adcode)
 }
 
-const loadBoundary = (data) => {
+function draw(adcode) {
 
-  data.children.forEach((item) => {
-    // 动态创建 script 标签
-    const script = document.createElement('script');
-    script.src = "/geoJson/" + item.code + ".js";
-// 将 script 标签添加到页面，触发请求
-    document.head.appendChild(script);
-  })
+  var districtExplorer = districtExplorerRef.value;
+  districtExplorer.loadAreaNode(adcode, function (error, areaNode) {
+    if (error) {
+      console.error(error);
+      return;
+    }
 
+    //绘制载入的区划节点
+    renderAreaNode(districtExplorer, areaNode);
+  });
+}
 
+function renderAreaNode(districtExplorer, areaNode) {
+
+  //清除已有的绘制内容
+  districtExplorer.clearFeaturePolygons();
+
+  //just some colors
+  var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00"];
+
+  let childrenSize = 0;
+  //绘制子级区划
+  districtExplorer.renderSubFeatures(areaNode, function (feature, i) {
+    childrenSize++
+
+    // console.log(i, feature.properties.adcode, feature);
+
+    var fillColor = colors[i % colors.length];
+    var strokeColor = colors[colors.length - 1 - i % colors.length];
+    // console.log("areaNode ", areaNode, fillColor, strokeColor);
+
+    return {
+      cursor: 'default',
+      bubble: true,
+      strokeColor: strokeColor, //线颜色
+      strokeOpacity: 1, //线透明度
+      strokeWeight: 1, //线宽
+      fillColor: fillColor, //填充色
+      fillOpacity: 0.35, //填充透明度
+    };
+  });
+
+  const fc = childrenSize !== 0 ? null : "red";
+  console.info("childrenSize ", childrenSize, fc)
+
+  //绘制父级区划，仅用黑色描边
+  districtExplorer.renderParentFeature(areaNode, {
+    cursor: 'default',
+    bubble: true,
+    strokeColor: 'black', //线颜色
+    fillColor: fc,
+    strokeWeight: 1, //线宽
+  });
+
+  //更新地图视野以适合区划面
+  gdMap.value.setFitView(districtExplorer.getAllFeaturePolygons());
 }
 
 </script>
@@ -121,8 +130,9 @@ const loadBoundary = (data) => {
                 <div style="width: 100%;display: flex; justify-content: space-between; align-items: center;">
                   <span
                       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 100px);"
-                      @click="districtCodeClick(data)">{{ data.name }}</span>
-                  <span style="float: right;margin-right: 15px;white-space: nowrap;" @click="downLoadBoundary(data)">
+                      @click="draw(data.code)"
+                  >{{ data.name }}</span>
+                  <span style="float: right;margin-right: 15px;white-space: nowrap;display: none" @click="downLoadBoundary(data)">
                     <View style="width: 14px;font-size: 14px"/></span>
                 </div>
               </template>

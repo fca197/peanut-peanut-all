@@ -3,6 +3,7 @@ package com.olivia.peanut.base.model;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.olivia.sdk.utils.BaseEntity;
 import java.math.BigDecimal;
 import java.util.List;

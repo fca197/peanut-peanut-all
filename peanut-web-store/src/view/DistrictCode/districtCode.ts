@@ -1,9 +1,9 @@
 import {postResultInfoList} from "@@/utils/common-js.ts";
 
-export function queryDistrictCode(parentCode: string): Promise<DistrictCode[]> {
+export function queryDistrictCode(parentCode: string | undefined, level: number[] = []): Promise<DistrictCode[]> {
 
   return postResultInfoList("/districtCode/queryList", {
-    data: {parentCode}
+    data: {parentCode: parentCode, levelList: level}
   });
 }
 

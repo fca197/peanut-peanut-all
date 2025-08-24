@@ -42,6 +42,13 @@ export function postNoResult(url: string, data: any, suMsg: string, suFun: (((da
   })
 }
 
+export function getResultByUrl(url: string) {
+  return request<Result<any>>({
+    url,
+    method: "get"
+  });
+}
+
 //  get调用获取结构
 export function getResult(url: string, suMsg: string | undefined, suFun: (((data: any) => void) | undefined)) {
   request<Result<any>>({
@@ -167,7 +174,7 @@ export async function pinyin4jSzm(value: string | undefined) {
 }
 
 // 获取汉字首字母
-export async function pinyin4jSzmV4(value: string | undefined, obj: any ,fieldName : string) {
+export async function pinyin4jSzmV4(value: string | undefined, obj: any, fieldName: string) {
   if (value === undefined || value.trim().length === 0) {
     return Promise.any("")
   }

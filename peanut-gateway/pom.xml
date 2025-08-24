@@ -34,7 +34,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <includeSystemScope>true</includeSystemScope>
-          <mainClass>com.olivia.BootstrapApplication</mainClass>
+          <mainClass>com.olivia.PortalBootstrapApplication</mainClass>
 
         </configuration>
         <groupId>org.springframework.boot</groupId>
