@@ -37,7 +37,7 @@ public class GdQueryDistrictBoundaryServiceImpl implements QueryDistrictBoundary
   @SneakyThrows
   public DistrictCodeBoundary queryDistrictCodeFormMap(String areaCode) {
 
-    String url = "https://restapi.amap.com/v3/config/district?key=" + peanutProperties.getGaoDeWebKey() + "&keywords=" + areaCode + "&subdistrict=0&extensions=all";
+    String url = "https://restapi.amap.com/v3/config/district?key=" + peanutProperties.getMapConfig().getGaoDeWebKey() + "&keywords=" + areaCode + "&subdistrict=0&extensions=all";
 
     GdDistrictBoundary districtBoundary = HttpClientUtils.get(url, GdDistrictBoundary.class);
 

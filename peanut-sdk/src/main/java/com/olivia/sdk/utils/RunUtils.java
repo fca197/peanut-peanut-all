@@ -81,6 +81,14 @@ public class RunUtils implements AutoCloseable {
     asyncRun(key, runnable, true);
   }
 
+  public static <T extends Runnable> void asyncRun(Boolean conn, String key, T runnable) {
+    if (conn) {
+      asyncRun(key, runnable, true);
+    } else {
+      log.warn("asyncRun: key={}, conn=false", key);
+    }
+  }
+
   /**
    * 异步执行指定任务，支持选择线程类型
    *

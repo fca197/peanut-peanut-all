@@ -4,10 +4,10 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class SelectPoiReq {
+public class SelectPoiReq implements GdBaseReq {
 
   private String keywords;
-  private List<String> poiList;
+  private List<String> types;
 
   private Integer pageNum = 1;
   private Integer pageSize = 10;

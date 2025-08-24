@@ -118,11 +118,7 @@ public class PeanutProperties {
 
   private String ortoolsSoPath;
 
-  /***
-   * 高德web key
-   *  https://console.amap.com/dev/key/app  Web服务 类型
-   */
-  private String gaoDeWebKey;
+  private MapConfig mapConfig;
 
   /**
    * 初始化后检查必要的配置参数 使用PostConstruct确保在依赖注入完成后执行
