@@ -1,10 +1,11 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import {onMounted, ref} from "vue"
 import AddEditFormVue from "./StoreBusinessDistrictAddEditForm.vue"
 import TableBar from "@/layouts/components/TableBar/index.vue"
 import {ElTable} from "element-plus";
 import {HeaderInfo, postResultInfo} from "@@/utils/common-js.ts"
 import {type StoreBusinessDistrict} from "./StoreBusinessDistrictType.ts"
+import {queryBrandList, TBrand} from "@v/base/TBrand/TBrandType.ts";
 
 const dtoUrl = ref<string>("/storeBusinessDistrict")
 const documentTitle = ref<string>("商圈")
@@ -47,7 +48,7 @@ const currentPageSize = ref<number>(10)
 const tableTotal = ref<number>(0)
 const headerList = ref<HeaderInfo[]>([
   {fieldName: "id", showName: "序号"},
-  {fieldName: "brandId", showName: "品牌ID"},
+  {fieldName: "brandId", showName: "品牌"},
   {fieldName: "businessDistrictCode", showName: "编码"},
   {fieldName: "businessDistrictName", showName: "名称"},
   {fieldName: "businessDistrictDesc", showName: "描述"},
@@ -80,7 +81,7 @@ const getDataList = () => {
   .then((t) => {
     dataList.value = t.data.dataList
     tableTotal.value = Number.parseInt(t.data.total)
-    headerList.value = t.data.headerList
+    // headerList.value = t.data.headerList
     loadEntity.value = false
   })
 }
@@ -105,22 +106,26 @@ const handleSelectionChange = (val: StoreBusinessDistrict[]) => {
   multipleSelection.value = val.map(t => t.id)
   console.info("multipleSelection ", multipleSelection)
 }
-
+const brandList = ref<TBrand []>([])
 // 页面加载事件
 onMounted(() => {
   getDataList()
+  queryBrandList().then(res => {
+    brandList.value = res
+  });
 })
+
 </script>
 
 <template>
   <div class="app-container">
     <el-card class="search-wrapper" shadow="never">
       <el-form v-model="queryForm" inline>
-        <el-form-item label="品牌ID" prop="brandId">
+        <el-form-item label="品牌" prop="brandId">
           <el-input
               v-model="queryForm.brandId"
               clearable
-              placeholder="请输入品牌ID"
+              placeholder="请输入品牌"
           />
         </el-form-item>
         <el-form-item label="编码" prop="businessDistrictCode">
@@ -135,20 +140,6 @@ onMounted(() => {
               v-model="queryForm.businessDistrictName"
               clearable
               placeholder="请输入名称"
-          />
-        </el-form-item>
-        <el-form-item label="描述" prop="businessDistrictDesc">
-          <el-input
-              v-model="queryForm.businessDistrictDesc"
-              clearable
-              placeholder="请输入描述"
-          />
-        </el-form-item>
-        <el-form-item label="地址" prop="businessDistrictAddress">
-          <el-input
-              v-model="queryForm.businessDistrictAddress"
-              clearable
-              placeholder="请输入地址"
           />
         </el-form-item>
         <el-form-item label="国家编码" prop="countryCode">
@@ -179,34 +170,6 @@ onMounted(() => {
               placeholder="请输入城市编码"
           />
         </el-form-item>
-        <el-form-item label="国家编码" prop="countryName">
-          <el-input
-              v-model="queryForm.countryName"
-              clearable
-              placeholder="请输入国家编码"
-          />
-        </el-form-item>
-        <el-form-item label="城市编码" prop="provinceName">
-          <el-input
-              v-model="queryForm.provinceName"
-              clearable
-              placeholder="请输入城市编码"
-          />
-        </el-form-item>
-        <el-form-item label="城市编码" prop="cityName">
-          <el-input
-              v-model="queryForm.cityName"
-              clearable
-              placeholder="请输入城市编码"
-          />
-        </el-form-item>
-        <el-form-item label="城市编码" prop="areaName">
-          <el-input
-              v-model="queryForm.areaName"
-              clearable
-              placeholder="请输入城市编码"
-          />
-        </el-form-item>
         <el-form-item label="半径" prop="businessDistrictRadius">
           <el-input
               v-model="queryForm.businessDistrictRadius"
@@ -214,36 +177,8 @@ onMounted(() => {
               placeholder="请输入半径"
           />
         </el-form-item>
-        <el-form-item label="商圈级别ID" prop="businessDistrictLevelId">
-          <el-input
-              v-model="queryForm.businessDistrictLevelId"
-              clearable
-              placeholder="请输入商圈级别ID"
-          />
-        </el-form-item>
-        <el-form-item label="商圈类别ID" prop="businessDistrictTypeId">
-          <el-input
-              v-model="queryForm.businessDistrictTypeId"
-              clearable
-              placeholder="请输入商圈类别ID"
-          />
-        </el-form-item>
-        <el-form-item label="纬度" prop="centerLat">
-          <el-input
-              v-model="queryForm.centerLat"
-              clearable
-              placeholder="请输入纬度"
-          />
-        </el-form-item>
-        <el-form-item label="经度" prop="centerLng">
-          <el-input
-              v-model="queryForm.centerLng"
-              clearable
-              placeholder="请输入经度"
-          />
-        </el-form-item>
         <el-form-item>
-          <el-button icon="search" type="primary" @click="getDataList">
+          <el-button type="primary" icon="search" @click="getDataList">
             查询
           </el-button>
         </el-form-item>
@@ -252,25 +187,41 @@ onMounted(() => {
 
     <el-card shadow="never">
       <TableBar
-          ref="tableBarRef"
-          :add-component="AddEditFormVue"
-          :data-batch-delete-url="dataBatchDeleteUrl"
-          :data-table-ref="dataTableRef"
           :document-title="documentTitle"
-          :multiple-selection="multipleSelection"
+          :add-component="AddEditFormVue"
           :refresh-list="getDataList"
+          :data-table-ref="dataTableRef"
+          :multiple-selection="multipleSelection"
+          ref="tableBarRef"
+          :data-batch-delete-url="dataBatchDeleteUrl"
+          :dialog-with="1000"
       />
-      <ElTable ref="dataTableRef" v-loading="loadEntity" :data="dataList" stripe @selection-change="handleSelectionChange">
+      <ElTable v-loading="loadEntity" ref="dataTableRef" :data="dataList" stripe @selection-change="handleSelectionChange">
         <ElTableColumn type="selection"/>
-        <ElTableColumn
-            v-for="h in headerList" :key="h.fieldName" :label="h.showName"
-            :min-width="h.width" :prop="h.fieldName"
-        />
+        <ElTableColumn label="品牌" props="brandName"/>
+        <ElTableColumn label="编码" props="businessDistrictCode"/>
+        <ElTableColumn label="名称" props="businessDistrictName"/>
+        <ElTableColumn label="描述" props="businessDistrictDesc"/>
+        <ElTableColumn label="地址" props="businessDistrictAddress"/>
+        <ElTableColumn label="国家编码" props="countryCode"/>
+        <ElTableColumn label="城市编码" props="provinceCode"/>
+        <ElTableColumn label="城市编码" props="cityCode"/>
+        <ElTableColumn label="城市编码" props="areaCode"/>
+        <ElTableColumn label="国家编码" props="countryName"/>
+        <ElTableColumn label="城市编码" props="provinceName"/>
+        <ElTableColumn label="城市编码" props="cityName"/>
+        <ElTableColumn label="城市编码" props="areaName"/>
+        <ElTableColumn label="半径" props="businessDistrictRadius"/>
+        <ElTableColumn label="商圈级别ID" props="businessDistrictLevelId"/>
+        <ElTableColumn label="商圈类别ID" props="businessDistrictTypeId"/>
+        <ElTableColumn label="纬度" props="centerLat"/>
+        <ElTableColumn label="经度" props="centerLng"/>
+
         <ElTableColumn fixed="right" label="操作" width="150px">
           <template #default="scope">
             <el-button
-                icon="edit"
                 type="warning"
+                icon="edit"
                 @click="editData(scope.row)"
             >
               编辑
@@ -280,11 +231,11 @@ onMounted(() => {
       </ElTable>
       <el-row class="paginationDiv">
         <el-pagination
+            background
             v-model:current-page="currentPageNum"
             v-model:page-size="currentPageSize"
-            :total="tableTotal"
-            background
             layout="total, sizes, prev, pager, next"
+            :total="tableTotal"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
@@ -293,7 +244,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 
 </style>
 

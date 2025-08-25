@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import {onMounted, ref} from "vue"
 import {type StoreBusinessDistrictLevel} from "./StoreBusinessDistrictLevelType.ts"
 import {getById, postNoResult} from "@/common/utils/common-js.ts"
@@ -25,16 +25,6 @@ const checkRules = ref<FormRules>({
     {required: true, message: "请输入商圈名称", trigger: "blur"},
     {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
   ],
-  // 商圈描述
-  businessDistrictLevelDesc: [
-    {required: true, message: "请输入商圈描述", trigger: "blur"},
-    {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
-  ],
-  // 商圈颜色
-  businessDistrictLevelColor: [
-    {required: true, message: "请输入商圈颜色", trigger: "blur"},
-    {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
-  ],
 
 })
 
@@ -49,6 +39,7 @@ const addForm = ref<StoreBusinessDistrictLevel>({
 
 const loadById = () => {
   if (!props.editId) {
+    loadEntity.value = false
     return
   }
   console.info("props.editId ", props.editId)
@@ -96,38 +87,43 @@ onMounted(() => {
 </script>
 
 <template>
-  <el-form ref="addFormRef" v-loading="loadEntity" :model="addForm" :rules="checkRules" label-width="80px">
+  <el-form v-loading="loadEntity" label-width="80px" :model="addForm" ref="addFormRef" :rules="checkRules">
     <el-form-item label="商圈名称" prop="businessDistrictLevelName">
       <el-input
-          v-model="queryForm.businessDistrictLevelName"
+          v-model="addForm.businessDistrictLevelName"
           clearable
           placeholder="请输入商圈名称"
       />
     </el-form-item>
-    <el-form-item label="商圈描述" prop="businessDistrictLevelDesc">
-      <el-input
-          v-model="queryForm.businessDistrictLevelDesc"
-          clearable
-          placeholder="请输入商圈描述"
-      />
-    </el-form-item>
+
     <el-form-item label="商圈颜色" prop="businessDistrictLevelColor">
-      <el-input
-          v-model="queryForm.businessDistrictLevelColor"
+      <el-color-picker
+          v-model="addForm.businessDistrictLevelColor"
           clearable
           placeholder="请输入商圈颜色"
       />
     </el-form-item>
+    <el-form-item label="商圈描述" prop="businessDistrictLevelDesc">
+      <el-input
+          :rows="5"
+          maxlength="300"
+          show-word-limit
+          type="textarea"
+          v-model="addForm.businessDistrictLevelDesc"
+          clearable
+          placeholder="请输入商圈描述"
+      />
+    </el-form-item>
   </el-form>
   <el-row class="addFormBtnRow">
-    <el-button icon="close" type="info" @click="cancelForm">
+    <el-button @click="cancelForm" type="info" icon="close">
       取消
     </el-button>
-    <el-button icon="check" type="primary" @click="saveForm">
+    <el-button @click="saveForm" type="primary" icon="check">
       确定
     </el-button>
   </el-row>
 </template>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 </style>

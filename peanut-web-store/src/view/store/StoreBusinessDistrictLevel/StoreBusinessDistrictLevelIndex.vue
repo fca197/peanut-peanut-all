@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import {onMounted, ref} from "vue"
 import AddEditFormVue from "./StoreBusinessDistrictLevelAddEditForm.vue"
 import TableBar from "@/layouts/components/TableBar/index.vue"
@@ -35,6 +35,8 @@ const headerList = ref<HeaderInfo[]>([
   {fieldName: "businessDistrictLevelName", showName: "商圈名称"},
   {fieldName: "businessDistrictLevelDesc", showName: "商圈描述"},
   {fieldName: "businessDistrictLevelColor", showName: "商圈颜色"},
+  {fieldName: "updateTime", showName: "修改时间"},
+  {fieldName: "updateUserName", showName: "修改人"},
 ])
 
 // 获取表格内数据
@@ -50,7 +52,7 @@ const getDataList = () => {
   .then((t) => {
     dataList.value = t.data.dataList
     tableTotal.value = Number.parseInt(t.data.total)
-    headerList.value = t.data.headerList
+    // headerList.value = t.data.headerList
     loadEntity.value = false
   })
 }
@@ -93,22 +95,8 @@ onMounted(() => {
               placeholder="请输入商圈名称"
           />
         </el-form-item>
-        <el-form-item label="商圈描述" prop="businessDistrictLevelDesc">
-          <el-input
-              v-model="queryForm.businessDistrictLevelDesc"
-              clearable
-              placeholder="请输入商圈描述"
-          />
-        </el-form-item>
-        <el-form-item label="商圈颜色" prop="businessDistrictLevelColor">
-          <el-input
-              v-model="queryForm.businessDistrictLevelColor"
-              clearable
-              placeholder="请输入商圈颜色"
-          />
-        </el-form-item>
         <el-form-item>
-          <el-button icon="search" type="primary" @click="getDataList">
+          <el-button type="primary" icon="search" @click="getDataList">
             查询
           </el-button>
         </el-form-item>
@@ -117,25 +105,35 @@ onMounted(() => {
 
     <el-card shadow="never">
       <TableBar
-          ref="tableBarRef"
-          :add-component="AddEditFormVue"
-          :data-batch-delete-url="dataBatchDeleteUrl"
-          :data-table-ref="dataTableRef"
           :document-title="documentTitle"
-          :multiple-selection="multipleSelection"
+          :add-component="AddEditFormVue"
           :refresh-list="getDataList"
+          :data-table-ref="dataTableRef"
+          :multiple-selection="multipleSelection"
+          ref="tableBarRef"
+          :data-batch-delete-url="dataBatchDeleteUrl"
       />
-      <ElTable ref="dataTableRef" v-loading="loadEntity" :data="dataList" stripe @selection-change="handleSelectionChange">
+      <ElTable v-loading="loadEntity" ref="dataTableRef" :data="dataList" stripe @selection-change="handleSelectionChange">
         <ElTableColumn type="selection"/>
-        <ElTableColumn
-            v-for="h in headerList" :key="h.fieldName" :label="h.showName"
-            :min-width="h.width" :prop="h.fieldName"
-        />
+        <!--        <ElTableColumn v-for="h in headerList" :key="h.fieldName" :label="h.showName"-->
+        <!--            :prop="h.fieldName" :min-width="h.width"-->
+        <!--        />-->
+        <ElTableColumn label="序号" prop="id"/>
+        <ElTableColumn label="名称" prop="businessDistrictLevelName"/>
+        <ElTableColumn label="颜色" prop="businessDistrictLevelColor" >
+          <template #default="scope">
+            <div :style="'width: 23px; height:23px; background-color: '+scope.row.businessDistrictLevelColor"></div>
+          </template>
+        </ElTableColumn>
+        <ElTableColumn label="描述" prop="businessDistrictLevelDesc"
+                       show-overflow-tooltip/>
+        <ElTableColumn label="修改时间" prop="updateTime"/>
+        <ElTableColumn label="修改人" prop="updateUserName"/>
         <ElTableColumn fixed="right" label="操作" width="150px">
           <template #default="scope">
             <el-button
-                icon="edit"
                 type="warning"
+                icon="edit"
                 @click="editData(scope.row)"
             >
               编辑
@@ -145,11 +143,11 @@ onMounted(() => {
       </ElTable>
       <el-row class="paginationDiv">
         <el-pagination
+            background
             v-model:current-page="currentPageNum"
             v-model:page-size="currentPageSize"
-            :total="tableTotal"
-            background
             layout="total, sizes, prev, pager, next"
+            :total="tableTotal"
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
@@ -158,7 +156,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 
 </style>
 

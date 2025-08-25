@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue"
-import {type StoreBusinessDistrictType} from "./StoreBusinessDistrictTypeType.ts"
+import {type TBrand} from "./TBrandType.ts"
 import {getById, pinyin4jSzmV4, postNoResult} from "@/common/utils/common-js.ts"
 import {type FormInstance, FormRules} from "element-plus"
+import {add} from "lodash-es";
 
 const props = defineProps({
   saveFun: {
@@ -15,34 +16,32 @@ const props = defineProps({
 })
 const loadEntity = ref<boolean>(true)
 // 对象URL
-const dtoUrl = ref<string>("/storeBusinessDistrictType")
+const dtoUrl = ref<string>("/brand")
 // 表单引用
 const addFormRef = ref<FormInstance>()
 // 表单校验规则
 const checkRules = ref<FormRules>({
-  // 类型名称
-  businessDistrictTypeName: [
-    {required: true, message: "请输入类型名称", trigger: "blur"},
+  //
+  brandCode: [
+    {required: true, message: "请输入编码", trigger: "blur"},
     {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
   ],
-  // 类型编码
-  businessDistrictTypeCode: [
-    {required: true, message: "请输入类型编码", trigger: "blur"},
+  //
+  brandName: [
+    {required: true, message: "请输入名称", trigger: "blur"},
     {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
   ],
-  // 类型描述
-  businessDistrictTypeDesc: [
-    {required: true, message: "请输入类型描述", trigger: "blur"},
-    {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
-  ],
+  //
 
 })
 
 // 添加对象
-const addForm = ref<StoreBusinessDistrictType>({
-  businessDistrictTypeName: "",
-  businessDistrictTypeCode: "",
-  businessDistrictTypeDesc: "",
+const addForm = ref<TBrand>({
+
+  brandCode: "",
+  brandName: "",
+  brandStatus: "",
+  isUsed: "",
   id: ""
 })
 
@@ -94,38 +93,26 @@ onMounted(() => {
   loadById()
 })
 
-const loadSzm = () => {
-  pinyin4jSzmV4(addForm.value.businessDistrictTypeName, addForm, "businessDistrictTypeCode")
+const loadSzm =()=>{
+  pinyin4jSzmV4(addForm.value.brandName,addForm,"brandCode")
 }
-
 </script>
 
 <template>
   <el-form v-loading="loadEntity" label-width="80px" :model="addForm" ref="addFormRef" :rules="checkRules">
-    <el-form-item label="类型名称" prop="businessDistrictTypeName">
+    <el-form-item label="品牌名称" prop="brandName">
       <el-input
-          v-model="addForm.businessDistrictTypeName"
-          clearable
-          placeholder="请输入类型名称"
           @blur="loadSzm"
+          v-model="addForm.brandName"
+          clearable
+          placeholder="请输入品牌名称"
       />
     </el-form-item>
-    <el-form-item label="类型编码" prop="businessDistrictTypeCode">
+    <el-form-item label="品牌编码" prop="brandCode">
       <el-input
-          v-model="addForm.businessDistrictTypeCode"
+          v-model="addForm.brandCode"
           clearable
-          placeholder="请输入类型编码"
-      />
-    </el-form-item>
-    <el-form-item label="类型描述" prop="businessDistrictTypeDesc">
-      <el-input
-          v-model="addForm.businessDistrictTypeDesc"
-          clearable
-          :rows="5"
-          maxlength="100"
-          show-word-limit
-          placeholder="请输入类型描述"
-          type="textarea"
+          placeholder="请输入品牌编码"
       />
     </el-form-item>
   </el-form>

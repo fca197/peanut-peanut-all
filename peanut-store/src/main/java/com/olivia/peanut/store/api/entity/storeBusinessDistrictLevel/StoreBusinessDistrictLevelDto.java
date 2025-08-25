@@ -27,12 +27,12 @@ public class StoreBusinessDistrictLevelDto extends BaseEntityDto {
   /***
    *  商圈描述
    */
-  @NotBlank(message = "商圈描述不能为空", groups = {InsertCheck.class, UpdateCheck.class})
+  @NotBlank(message = "商圈描述不能为空", groups = {UpdateCheck.class})
   private String businessDistrictLevelDesc;
   /***
    *  商圈颜色
    */
-  @NotBlank(message = "商圈颜色不能为空", groups = {InsertCheck.class, UpdateCheck.class})
+  @NotBlank(message = "商圈颜色不能为空", groups = {UpdateCheck.class})
   private String businessDistrictLevelColor;
 
 }

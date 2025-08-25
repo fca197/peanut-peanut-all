@@ -1,3 +1,5 @@
+import {postResultInfoList} from "@@/utils/common-js.ts";
+
 export interface StoreBusinessDistrictLevel {
   id?: string | undefined
   businessDistrictLevelName?: string | undefined
@@ -13,4 +15,8 @@ export interface StoreBusinessDistrictLevel {
   tenantId?: string | undefined
   createUserName?: string | undefined
   updateUserName?: string | undefined
+}
+
+export function queryLevelList(){
+  return postResultInfoList("/storeBusinessDistrictLevel/queryPageList",{})
 }

@@ -37,7 +37,7 @@ const downLoadBoundary = (data) => {
 }
 
 function initPage(DistrictExplorer) {
-  console.log(DistrictExplorer);
+  // console.log(DistrictExplorer);
   //创建一个实例
   var districtExplorer = new DistrictExplorer({
     map: gdMap.value //关联的地图实例

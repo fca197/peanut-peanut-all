@@ -23,7 +23,7 @@ const app = createApp(App)
 installPlugins(app)
 
 // 初始化百度统计（替换为你的 ID）
-initBaiduAnalytics("74466160c005f4fe5c7c40b4e1c06610")
+// initBaiduAnalytics("74466160c005f4fe5c7c40b4e1c06610")
 
 // 安装 pinia 和 router
 app.use(pinia).use(router)

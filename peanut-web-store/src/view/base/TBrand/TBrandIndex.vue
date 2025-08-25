@@ -1,20 +1,22 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue"
-import AddEditFormVue from "./StoreBusinessDistrictTypeAddEditForm.vue"
+import AddEditFormVue from "./TBrandAddEditForm.vue"
 import TableBar from "@/layouts/components/TableBar/index.vue"
 import {ElTable} from "element-plus";
 import {HeaderInfo, postResultInfo} from "@@/utils/common-js.ts"
-import {type StoreBusinessDistrictType} from "./StoreBusinessDistrictTypeType.ts"
+import {type TBrand} from "./TBrandType.ts"
 
-const dtoUrl = ref<string>("/storeBusinessDistrictType")
-const documentTitle = ref<string>("商圈类型")
+const dtoUrl = ref<string>("/brand")
+const documentTitle = ref<string>("品牌表")
 const dataBatchDeleteUrl = ref<string>(`${dtoUrl.value}/deleteByIdList`)
 const loadEntity = ref<boolean>(true)
 // 查询表格
-const queryForm = ref<StoreBusinessDistrictType>({
-  businessDistrictTypeName: undefined,
-  businessDistrictTypeCode: undefined,
-  businessDistrictTypeDesc: undefined,
+const queryForm = ref<TBrand>({
+  factoryId: undefined,
+  brandCode: undefined,
+  brandName: undefined,
+  brandStatus: undefined,
+  isUsed: undefined,
   id: undefined
 })
 
@@ -26,15 +28,17 @@ const dataTableRef = ref({})
 // 表格操作头
 const tableBarRef = ref<InstanceType<typeof TableBar> | null>(null)
 // 表格相关
-const dataList = ref<StoreBusinessDistrictType[]>([])
+const dataList = ref<TBrand[]>([])
 const currentPageNum = ref<number>(1)
 const currentPageSize = ref<number>(10)
 const tableTotal = ref<number>(0)
 const headerList = ref<HeaderInfo[]>([
   {fieldName: "id", showName: "序号"},
-  {fieldName: "businessDistrictTypeName", showName: "类型名称"},
-  {fieldName: "businessDistrictTypeCode", showName: "类型编码"},
-  {fieldName: "businessDistrictTypeDesc", showName: "类型描述"},
+  {fieldName: "factoryId", showName: "工厂ID"},
+  {fieldName: "brandCode", showName: ""},
+  {fieldName: "brandName", showName: ""},
+  {fieldName: "brandStatus", showName: ""},
+  {fieldName: "isUsed", showName: ""},
 ])
 
 // 获取表格内数据
@@ -50,7 +54,7 @@ const getDataList = () => {
   .then((t) => {
     dataList.value = t.data.dataList
     tableTotal.value = Number.parseInt(t.data.total)
-    headerList.value = t.data.headerList
+    // headerList.value = t.data.headerList
     loadEntity.value = false
   })
 }
@@ -71,7 +75,7 @@ const handleCurrentChange = (val: number) => {
   getDataList()
 }
 // 表格选中事件
-const handleSelectionChange = (val: StoreBusinessDistrictType[]) => {
+const handleSelectionChange = (val: TBrand[]) => {
   multipleSelection.value = val.map(t => t.id)
   console.info("multipleSelection ", multipleSelection)
 }
@@ -86,25 +90,18 @@ onMounted(() => {
   <div class="app-container">
     <el-card class="search-wrapper" shadow="never">
       <el-form v-model="queryForm" inline>
-        <el-form-item label="类型名称" prop="businessDistrictTypeName">
+        <el-form-item label="品牌编码" prop="brandCode">
           <el-input
-              v-model="queryForm.businessDistrictTypeName"
+              v-model="queryForm.brandCode"
               clearable
-              placeholder="请输入类型名称"
+              placeholder="请输入品牌编码"
           />
         </el-form-item>
-        <el-form-item label="类型编码" prop="businessDistrictTypeCode">
+        <el-form-item label="品牌名称" prop="brandName">
           <el-input
-              v-model="queryForm.businessDistrictTypeCode"
+              v-model="queryForm.brandName"
               clearable
-              placeholder="请输入类型编码"
-          />
-        </el-form-item>
-        <el-form-item label="类型描述" prop="businessDistrictTypeDesc">
-          <el-input
-              v-model="queryForm.businessDistrictTypeDesc"
-              clearable
-              placeholder="请输入类型描述"
+              placeholder="请输入品牌名称"
           />
         </el-form-item>
         <el-form-item>
@@ -127,11 +124,11 @@ onMounted(() => {
       />
       <ElTable v-loading="loadEntity" ref="dataTableRef" :data="dataList" stripe @selection-change="handleSelectionChange">
         <ElTableColumn type="selection"/>
-        <el-table-column label="名称" prop="businessDistrictTypeName"/>
-        <el-table-column label="编码" prop="businessDistrictTypeCode"/>
-        <el-table-column label="描述" prop="businessDistrictTypeDesc" show-overflow-tooltip/>
-        <el-table-column label="修改时间" prop="updateTime"/>
-        <el-table-column label="修改人" prop="updateUserName"/>
+        <ElTableColumn label="序号" prop="id"/>
+        <ElTableColumn label="品牌名称" prop="brandName"/>
+        <ElTableColumn label="品牌编码" prop="brandCode"/>
+        <ElTableColumn label="修改时间" prop="updateTime"/>
+        <ElTableColumn label="修改人" prop="updateUserName"/>
         <ElTableColumn fixed="right" label="操作" width="150px">
           <template #default="scope">
             <el-button

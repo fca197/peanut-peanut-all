@@ -1,8 +1,10 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import {onMounted, ref} from "vue"
 import {type StoreBusinessDistrict} from "./StoreBusinessDistrictType.ts"
-import {getById, postNoResult} from "@/common/utils/common-js.ts"
+import {getById, pinyin4jSzmV4, postNoResult} from "@/common/utils/common-js.ts"
 import {type FormInstance, FormRules} from "element-plus"
+import {queryBrandList, TBrand} from "@v/base/TBrand/TBrandType.ts";
+import {queryLevelList, StoreBusinessDistrictLevel} from "@v/store/StoreBusinessDistrictLevel/StoreBusinessDistrictLevelType.ts";
 
 const props = defineProps({
   saveFun: {
@@ -20,9 +22,9 @@ const dtoUrl = ref<string>("/storeBusinessDistrict")
 const addFormRef = ref<FormInstance>()
 // 表单校验规则
 const checkRules = ref<FormRules>({
-  // 品牌ID
+  // 品牌
   brandId: [
-    {required: true, message: "请输入品牌ID", trigger: "blur"},
+    {required: true, message: "请输入品牌", trigger: "blur"},
     {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
   ],
   // 编码
@@ -90,14 +92,14 @@ const checkRules = ref<FormRules>({
     {required: true, message: "请输入半径", trigger: "blur"},
     {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
   ],
-  // 商圈级别ID
+  // 商圈级别
   businessDistrictLevelId: [
-    {required: true, message: "请输入商圈级别ID", trigger: "blur"},
+    {required: true, message: "请输入商圈级别", trigger: "blur"},
     {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
   ],
-  // 商圈类别ID
+  // 商圈类别
   businessDistrictTypeId: [
-    {required: true, message: "请输入商圈类别ID", trigger: "blur"},
+    {required: true, message: "请输入商圈类别", trigger: "blur"},
     {min: 2, max: 20, message: "长度在 2 到 20 个字符", trigger: "blur"}
   ],
   // 纬度
@@ -139,6 +141,7 @@ const addForm = ref<StoreBusinessDistrict>({
 
 const loadById = () => {
   if (!props.editId) {
+    loadEntity.value = false
     return
   }
   console.info("props.editId ", props.editId)
@@ -154,7 +157,7 @@ const saveForm = () => {
   console.info("addForm ", addForm)
   addFormRef.value?.validate((valid) => {
     if (valid) {
-      // 存在ID ，调用更新
+      // 存在 ，调用更新
       if (props.editId) {
         postNoResult(`${dtoUrl.value}/updateById`, addForm.value, "修改成功", saveFormAfter)
       } else {
@@ -178,151 +181,224 @@ const cancelForm = () => {
     props.saveFun()
   }
 }
+const brandList = ref<TBrand[]>([])
+const levelList = ref<StoreBusinessDistrictLevel[]>([])
+const loadSzm = () => {
+  pinyin4jSzmV4(addForm.value.businessDistrictName, addForm, "businessDistrictCode")
+}
+const mapCircle = ref(null)
+const mapInstance = ref(null)
 
+const drawCircle = ()=>{
+  const n =addForm.value.businessDistrictRadius
+  if (n) {
+    if (mapCircle.value != null) {
+      mapInstance.value.remove(mapCircle.value)
+    }
+    mapCircle.value = new AMap.Circle({
+      center: [addForm.value.centerLng, addForm.value.centerLat],
+      radius: n, //半径
+      borderWeight: 3,
+      strokeColor: "#FF33FF",
+      strokeOpacity: 1,
+      strokeWeight: 6,
+      strokeOpacity: 0.2,
+      fillOpacity: 0.4,
+      strokeStyle: 'dashed',
+      strokeDasharray: [10, 10],
+      // 线样式还支持 'dashed'
+      fillColor: '#1791fc',
+      zIndex: 50,
+    })
+    mapInstance.value.add(mapCircle.value)
+  }
+}
+
+watch(() => addForm.value.businessDistrictRadius, (n) => {
+  drawCircle()
+})
+
+const loadMap = () => {
+  //加载PositionPicker，loadUI的路径参数为模块名中 "ui/" 之后的部分
+  AMapUI.loadUI(["misc/PositionPicker"], function (PositionPicker) {
+    const map = new AMap.Map("mapDiv", {
+      zoom: 16
+    })
+    map.plugin(["AMap.ToolBar"], function () {
+      //加载工具条
+      var tool = new AMap.ToolBar();
+      map.addControl(tool);
+    });
+    var positionPicker = new PositionPicker({
+      mode: "dragMap",//设定为拖拽地图模式，可选"dragMap"、"dragMarker"，默认为"dragMap"
+      map: map//依赖地图对象
+    });
+    mapInstance.value = map;
+    positionPicker.on("success", function (positionResult) {
+
+      addForm.value.businessDistrictName = "";
+      addForm.value.centerLng = positionResult.position.lng
+      addForm.value.centerLat = positionResult.position.lat
+
+      addForm.value.businessDistrictName = positionResult.nearestPOI
+      addForm.value.businessDistrictAddress = positionResult.address
+      addForm.value.areaCode = positionResult.regeocode?.addressComponent.adcode
+      drawCircle()
+    });
+    positionPicker.on("fail", function (positionResult) {
+      console.info("fail", positionResult)
+    });
+    map.panBy(0, 1);
+    positionPicker.start();
+
+  });
+
+}
 // 页面加载事件
 onMounted(() => {
   loadById()
+  queryBrandList().then((t) => brandList.value = t)
+  queryLevelList().then((t) => levelList.value = t)
+  //mapDiv
+  loadMap();
 })
 </script>
 
 <template>
-  <el-form ref="addFormRef" v-loading="loadEntity" :model="addForm" :rules="checkRules" label-width="80px">
-    <el-form-item label="品牌ID" prop="brandId">
-      <el-input
-          v-model="queryForm.brandId"
+  <el-form v-loading="loadEntity" label-width="100px" inline :model="addForm" ref="addFormRef" :rules="checkRules">
+    <el-form-item label="品牌" prop="brandId">
+      <el-select
+          v-model="addForm.brandId"
           clearable
-          placeholder="请输入品牌ID"
+          placeholder="请选择品牌"
+          style="width:178px"
+      >
+        <el-option
+            v-for="b in brandList"
+            :key="b.id"
+            :label="b.brandName"
+            :value="b.id"
+        />
+      </el-select>
+    </el-form-item>
+    <el-divider/>
+    <el-form-item>
+      <el-form-item>
+        <div id="mapDiv" style="width: 900px; height: 300px;margin-left: 30px">
+
+        </div>
+      </el-form-item>
+    </el-form-item>
+    <el-form-item label="名称" prop="businessDistrictName">
+      <el-input
+          v-model="addForm.businessDistrictName"
+          clearable
+          @blur="loadSzm"
+          placeholder="请输入名称"
       />
     </el-form-item>
     <el-form-item label="编码" prop="businessDistrictCode">
       <el-input
-          v-model="queryForm.businessDistrictCode"
+          v-model="addForm.businessDistrictCode"
           clearable
           placeholder="请输入编码"
       />
     </el-form-item>
-    <el-form-item label="名称" prop="businessDistrictName">
-      <el-input
-          v-model="queryForm.businessDistrictName"
-          clearable
-          placeholder="请输入名称"
-      />
-    </el-form-item>
     <el-form-item label="描述" prop="businessDistrictDesc">
       <el-input
-          v-model="queryForm.businessDistrictDesc"
+          v-model="addForm.businessDistrictDesc"
           clearable
           placeholder="请输入描述"
       />
     </el-form-item>
     <el-form-item label="地址" prop="businessDistrictAddress">
       <el-input
-          v-model="queryForm.businessDistrictAddress"
+          v-model="addForm.businessDistrictAddress"
           clearable
           placeholder="请输入地址"
       />
     </el-form-item>
     <el-form-item label="国家编码" prop="countryCode">
       <el-input
-          v-model="queryForm.countryCode"
+          v-model="addForm.countryCode"
           clearable
           placeholder="请输入国家编码"
       />
     </el-form-item>
     <el-form-item label="城市编码" prop="provinceCode">
       <el-input
-          v-model="queryForm.provinceCode"
+          v-model="addForm.provinceCode"
           clearable
           placeholder="请输入城市编码"
       />
     </el-form-item>
     <el-form-item label="城市编码" prop="cityCode">
       <el-input
-          v-model="queryForm.cityCode"
+          v-model="addForm.cityCode"
           clearable
           placeholder="请输入城市编码"
       />
     </el-form-item>
     <el-form-item label="城市编码" prop="areaCode">
       <el-input
-          v-model="queryForm.areaCode"
-          clearable
-          placeholder="请输入城市编码"
-      />
-    </el-form-item>
-    <el-form-item label="国家编码" prop="countryName">
-      <el-input
-          v-model="queryForm.countryName"
-          clearable
-          placeholder="请输入国家编码"
-      />
-    </el-form-item>
-    <el-form-item label="城市编码" prop="provinceName">
-      <el-input
-          v-model="queryForm.provinceName"
-          clearable
-          placeholder="请输入城市编码"
-      />
-    </el-form-item>
-    <el-form-item label="城市编码" prop="cityName">
-      <el-input
-          v-model="queryForm.cityName"
-          clearable
-          placeholder="请输入城市编码"
-      />
-    </el-form-item>
-    <el-form-item label="城市编码" prop="areaName">
-      <el-input
-          v-model="queryForm.areaName"
+          v-model="addForm.areaCode"
           clearable
           placeholder="请输入城市编码"
       />
     </el-form-item>
     <el-form-item label="半径" prop="businessDistrictRadius">
       <el-input
-          v-model="queryForm.businessDistrictRadius"
+          v-model="addForm.businessDistrictRadius"
           clearable
           placeholder="请输入半径"
       />
     </el-form-item>
-    <el-form-item label="商圈级别ID" prop="businessDistrictLevelId">
-      <el-input
-          v-model="queryForm.businessDistrictLevelId"
+    <el-form-item label="商圈级别" prop="businessDistrictLevelId">
+      <el-select
+          v-model="addForm.businessDistrictLevelId"
           clearable
-          placeholder="请输入商圈级别ID"
-      />
+          placeholder="请输入商圈级别"
+          style="width:178px"
+      >
+        <el-option
+            v-for="l in levelList"
+            :label="l.businessDistrictLevelName"
+            :key="l.id"
+            :value="l.id"
+        />
+      </el-select>
     </el-form-item>
-    <el-form-item label="商圈类别ID" prop="businessDistrictTypeId">
+    <el-form-item label="商圈类别" prop="businessDistrictTypeId">
       <el-input
-          v-model="queryForm.businessDistrictTypeId"
+          v-model="addForm.businessDistrictTypeId"
           clearable
-          placeholder="请输入商圈类别ID"
+          placeholder="请输入商圈类别"
       />
     </el-form-item>
     <el-form-item label="纬度" prop="centerLat">
       <el-input
-          v-model="queryForm.centerLat"
+          v-model="addForm.centerLat"
           clearable
           placeholder="请输入纬度"
       />
     </el-form-item>
     <el-form-item label="经度" prop="centerLng">
       <el-input
-          v-model="queryForm.centerLng"
+          v-model="addForm.centerLng"
           clearable
           placeholder="请输入经度"
       />
     </el-form-item>
   </el-form>
   <el-row class="addFormBtnRow">
-    <el-button icon="close" type="info" @click="cancelForm">
+    <el-button @click="cancelForm" type="info" icon="close">
       取消
     </el-button>
-    <el-button icon="check" type="primary" @click="saveForm">
+    <el-button @click="saveForm" type="primary" icon="check">
       确定
     </el-button>
   </el-row>
 </template>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 </style>
